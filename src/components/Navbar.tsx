@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -44,31 +45,37 @@ export default function Navbar() {
         gutter={0}
       >
         <HStack width="100%" justifyContent="space-between" align="center">
-          <IconButton
-            aria-label="Menu"
-            icon={<HamburgerIcon />}
-            onClick={onOpen}
-          />
-          <LinkBox>
-            <LinkOverlay as={NextLink} href="/">
-              <Heading size="lg">RRRP Top Trumps</Heading>
-            </LinkOverlay>
-          </LinkBox>
-          {session ? (
-            <PopoverAnchor>
-              <PopoverTrigger>
-                <IconButton
-                  isRound
-                  aria-label="Profile"
-                  icon={<Avatar size="xs" name="" src="" />}
-                />
-              </PopoverTrigger>
-            </PopoverAnchor>
-          ) : (
-            <Button rightIcon={<ChevronRightIcon />} onClick={() => signIn()}>
-              Sign in
-            </Button>
-          )}
+          <Box flex="1 1 0">
+            <IconButton
+              aria-label="Menu"
+              icon={<HamburgerIcon />}
+              onClick={onOpen}
+            />
+          </Box>
+          <Flex flex="1 1 0" justifyContent="center">
+            <LinkBox>
+              <LinkOverlay as={NextLink} href="/">
+                <Heading size="lg">RRRP Top Trumps</Heading>
+              </LinkOverlay>
+            </LinkBox>
+          </Flex>
+          <Flex flex="1 1 0" justifyContent="flex-end">
+            {session ? (
+              <PopoverAnchor>
+                <PopoverTrigger>
+                  <IconButton
+                    isRound
+                    aria-label="Profile"
+                    icon={<Avatar size="xs" name="" src="" />}
+                  />
+                </PopoverTrigger>
+              </PopoverAnchor>
+            ) : (
+              <Button rightIcon={<ChevronRightIcon />} onClick={() => signIn()}>
+                Sign in
+              </Button>
+            )}
+          </Flex>
         </HStack>
         <Drawer isOpen={isOpen} onClose={onClose} placement="left">
           <DrawerOverlay />
