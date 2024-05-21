@@ -14,6 +14,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Card as CardType } from "@/utils/types";
+import { Image } from "@chakra-ui/next-js";
 
 export default function CardGallery() {
   const [cards, setCards] = useState<CardType[]>([]);
@@ -55,6 +56,15 @@ export default function CardGallery() {
               )}
             </Flex>
           </CardHeader>
+
+          {card.img && (
+            <Image
+              src={`data:jpeg;base64,${card.img}`}
+              alt={card.name}
+              height={50}
+              width={50}
+            />
+          )}
 
           <CardBody>
             <HStack height="100%">
