@@ -63,22 +63,27 @@ export default function CardGallery() {
                   <Heading size="xs">Strength</Heading>
                   <Text>{card.strength}</Text>
                 </HStack>
+                <Divider orientation="horizontal" />
                 <HStack justifyContent="space-between" width="100%">
                   <Heading size="xs">Comedic Timing</Heading>
                   <Text>{card.comedic_timing}</Text>
                 </HStack>
+                <Divider orientation="horizontal" />
                 <HStack justifyContent="space-between" width="100%">
                   <Heading size="xs">Dirty Minded</Heading>
                   <Text>{card.dirty_minded}</Text>
                 </HStack>
+                <Divider orientation="horizontal" />
                 <HStack justifyContent="space-between" width="100%">
                   <Heading size="xs">Accident Prone</Heading>
                   <Text>{card.accident_prone}</Text>
                 </HStack>
+                <Divider orientation="horizontal" />
                 <HStack justifyContent="space-between" width="100%">
                   <Heading size="xs">Rizz</Heading>
                   <Text>{card.rizz}</Text>
                 </HStack>
+                <Divider orientation="horizontal" />
                 <HStack justifyContent="space-between" width="100%">
                   <Heading size="xs">Serving Cunt</Heading>
                   <Text>{card.serving_cunt}</Text>
