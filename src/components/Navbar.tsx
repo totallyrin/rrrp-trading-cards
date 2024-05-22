@@ -20,8 +20,14 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  ChevronRightIcon,
+  CloseIcon,
+  EditIcon,
+  HamburgerIcon,
+} from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Footer from "@/components/Footer";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -29,7 +35,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 export default function Navbar() {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log(session?.user);
 
   return (
     <>
@@ -112,7 +117,30 @@ export default function Navbar() {
               />
             </Flex>
           </DrawerHeader>
-          <DrawerBody>text</DrawerBody>
+          <DrawerBody>
+            <VStack width="100%">
+              <Button
+                as={NextLink}
+                href="/"
+                width="100%"
+                variant="ghost"
+                justifyContent="flex-start"
+                // rightIcon={<StarIcon />}
+              >
+                Home
+              </Button>
+              <Button
+                as={NextLink}
+                href="/ManageCharacters"
+                width="100%"
+                variant="ghost"
+                justifyContent="space-between"
+                rightIcon={<EditIcon />}
+              >
+                Manage Characters
+              </Button>
+            </VStack>
+          </DrawerBody>
           <DrawerFooter>
             <Footer condensed />
           </DrawerFooter>
