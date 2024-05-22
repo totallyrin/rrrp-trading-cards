@@ -4,6 +4,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";
 import { Adapter } from "next-auth/adapters";
+import { sql } from "@vercel/postgres";
 
 const pool = new Pool({
   host: process.env.POSTGRES_HOST,
@@ -55,8 +56,10 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    session({ session, user }) {
-      session.user.role = user?.role ?? "user";
+    async session({ session }) {
+      const role =
+        await sql`SELECT role FROM users WHERE email = ${session.user.email}`;
+      session.user.role = role?.rows[0]?.role ?? "user";
       return session;
     },
   },
