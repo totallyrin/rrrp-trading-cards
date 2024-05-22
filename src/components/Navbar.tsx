@@ -14,105 +14,110 @@ import {
   IconButton,
   LinkBox,
   LinkOverlay,
-  Popover,
-  PopoverAnchor,
-  PopoverBody,
-  PopoverContent,
-  PopoverFooter,
-  PopoverHeader,
-  PopoverTrigger,
-  useBoolean,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Footer from "@/components/Footer";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isPop, setPop] = useBoolean();
+  console.log(session?.user);
 
   return (
     <>
-      <Popover
-        isOpen={isPop}
-        onOpen={setPop.on}
-        onClose={setPop.off}
-        closeOnBlur={true}
-        closeOnEsc={true}
-        gutter={0}
-      >
-        <HStack width="100%" justifyContent="space-between" align="center">
-          <Box flex="1 1 0">
-            <IconButton
-              aria-label="Menu"
-              icon={<HamburgerIcon />}
-              onClick={onOpen}
-            />
-          </Box>
-          <Flex flex="1 1 0" justifyContent="center">
-            <LinkBox>
-              <LinkOverlay as={NextLink} href="/">
-                <Heading size="lg">RRRP Top Trumps</Heading>
-              </LinkOverlay>
-            </LinkBox>
-          </Flex>
-          <Flex flex="1 1 0" justifyContent="flex-end">
-            {session ? (
-              <PopoverAnchor>
-                <PopoverTrigger>
-                  <IconButton
-                    isRound
-                    aria-label="Profile"
-                    icon={<Avatar size="xs" name="" src="" />}
-                  />
-                </PopoverTrigger>
-              </PopoverAnchor>
-            ) : (
-              <Button rightIcon={<ChevronRightIcon />} onClick={() => signIn()}>
-                Sign in
-              </Button>
-            )}
-          </Flex>
-        </HStack>
-        <Drawer isOpen={isOpen} onClose={onClose} placement="left">
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerHeader>
-              <Flex justifyContent="space-between">
+      <HStack width="100%" justifyContent="space-between" align="center">
+        <Box flex="1 1 0">
+          <IconButton
+            aria-label="Menu"
+            icon={<HamburgerIcon />}
+            onClick={onOpen}
+          />
+        </Box>
+        <Flex flex="1 1 0" justifyContent="center">
+          <LinkBox>
+            <LinkOverlay as={NextLink} href="/">
+              <Heading size="lg" textAlign="center">
                 RRRP Top Trumps
-                <IconButton
-                  aria-label="Close"
-                  onClick={onClose}
-                  size="sm"
-                  icon={<CloseIcon />}
-                />
-              </Flex>
-            </DrawerHeader>
-            <DrawerBody>text</DrawerBody>
-            <DrawerFooter>
-              <Footer condensed />
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-        <PopoverContent m={5}>
-          <PopoverHeader>
+              </Heading>
+            </LinkOverlay>
+          </LinkBox>
+        </Flex>
+        <Flex flex="1 1 0" justifyContent="flex-end">
+          {session ? (
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                isRound
+                aria-label="Profile"
+                icon={
+                  <Avatar
+                    size="sm"
+                    name={session?.user?.name ?? ""}
+                    src={session?.user?.image ?? ""}
+                  />
+                }
+              />
+              <MenuList px={2}>
+                <Heading size="md" textAlign="center">
+                  {session?.user?.name}
+                </Heading>
+                <MenuDivider />
+                <LinkBox>
+                  <LinkOverlay as={NextLink} href="#">
+                    <MenuItem
+                      as={Button}
+                      textAlign="left"
+                      rightIcon={<ChevronRightIcon />}
+                    >
+                      Account
+                    </MenuItem>
+                  </LinkOverlay>
+                </LinkBox>
+                <MenuItem
+                  as={Button}
+                  textAlign="left"
+                  rightIcon={<ChevronRightIcon />}
+                  onClick={() => signOut()}
+                >
+                  Sign out
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
+            <Button rightIcon={<ChevronRightIcon />} onClick={() => signIn()}>
+              Sign in
+            </Button>
+          )}
+        </Flex>
+      </HStack>
+      <Drawer isOpen={isOpen} onClose={onClose} placement="left">
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader>
             <Flex justifyContent="space-between">
-              Welcome, {session?.user?.name}.
+              RRRP Top Trumps
               <IconButton
                 aria-label="Close"
-                onClick={setPop.off}
-                size="xs"
+                onClick={onClose}
+                size="sm"
                 icon={<CloseIcon />}
               />
             </Flex>
-          </PopoverHeader>
-          <PopoverBody>text</PopoverBody>
-          <PopoverFooter></PopoverFooter>
-        </PopoverContent>
-      </Popover>
+          </DrawerHeader>
+          <DrawerBody>text</DrawerBody>
+          <DrawerFooter>
+            <Footer condensed />
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
