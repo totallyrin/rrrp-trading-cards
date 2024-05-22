@@ -9,4 +9,10 @@ export type Card = {
   rizz: string;
   serving_cunt: string;
   img: any;
+  image: string;
+  id: number;
+  residence: string;
+  occupation: string;
+  relationship_status: string;
+  quote: string;
 };
