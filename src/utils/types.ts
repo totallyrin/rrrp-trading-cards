@@ -14,4 +14,5 @@ export type Card = {
   occupation: string;
   relationship_status: string;
   quote: string;
+  special_interest: string;
 };

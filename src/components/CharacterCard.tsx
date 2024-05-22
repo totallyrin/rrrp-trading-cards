@@ -78,10 +78,10 @@ export default function CharacterCard({
             </Text>
             <Divider />
             <Heading size="xs" textAlign="center">
-              Relationship status
+              Special Interests
             </Heading>
             <Text fontSize="sm" textAlign="center">
-              {character.relationship_status ?? "Unknown"}
+              {character.special_interest ?? "Unknown"}
             </Text>
             {character.fact_file && <Divider />}
             {/*<Heading size="xs" textAlign="center">*/}
