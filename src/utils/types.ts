@@ -8,7 +8,6 @@ export type Card = {
   accident_prone: string;
   rizz: string;
   serving_cunt: string;
-  img: any;
   image: string;
   id: number;
   residence: string;

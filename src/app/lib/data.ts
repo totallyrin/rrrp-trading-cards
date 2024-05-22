@@ -6,7 +6,7 @@ export async function fetchAllCards() {
   try {
     return (
       await sql`
-SELECT *, ENCODE(img, 'base64') as image
+SELECT *
 FROM rrrp_top_trumps_cards
 ORDER BY name ASC
 `
