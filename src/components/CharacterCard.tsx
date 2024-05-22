@@ -126,7 +126,7 @@ export default function CharacterCard({
         </HStack>
       </CardBody>
 
-      <CardFooter pt={0}>
+      <CardFooter pt={0} justifyContent="center">
         <Text as="cite" textAlign="center">
           {character.quote}
         </Text>
