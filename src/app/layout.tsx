@@ -1,8 +1,7 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import React from "react";
-import {ColorModeScript} from "@chakra-ui/react";
-import theme from "@/utils/theme";
-import {Providers} from "@/app/providers";
+import { Providers } from "@/app/providers";
+import { ColorModeScript } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
   title: "Top Trumps",
@@ -10,18 +9,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                     children,
-                                   }: Readonly<{
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-    <body>
-    <Providers>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
-      {children}
-    </Providers>
-    </body>
+      <body>
+        <ColorModeScript initialColorMode="system" />
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
