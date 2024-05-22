@@ -6,11 +6,11 @@ import {
   CardHeader,
   Center,
   Divider,
-  Flex,
   Heading,
   HStack,
   Spacer,
   SystemStyleObject,
+  Tag,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -31,17 +31,14 @@ export default function CharacterCard({
       }}
     >
       <CardHeader>
-        <Flex justifyContent="space-between" height="100%">
+        <HStack justifyContent="space-between" alignItems="flex-start">
           <Heading size="sm">{character.name}</Heading>
           {character.pronouns.trim() !== "" && (
-            <HStack>
-              <Divider orientation="vertical" mx={1} />
-              <Heading size="xs" textAlign="right">
-                {character.pronouns}
-              </Heading>
-            </HStack>
+            <Tag whiteSpace="nowrap" size="sm">
+              {character.pronouns}
+            </Tag>
           )}
-        </Flex>
+        </HStack>
       </CardHeader>
 
       {character.image ? (
@@ -130,7 +127,9 @@ export default function CharacterCard({
       </CardBody>
 
       <CardFooter pt={0}>
-        <Text as="cite">{character.quote}</Text>
+        <Text as="cite" textAlign="center">
+          {character.quote}
+        </Text>
       </CardFooter>
     </Card>
   );
