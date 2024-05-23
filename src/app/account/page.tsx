@@ -102,7 +102,7 @@ export default function Account() {
           {/*<Heading size="md" mb={1}>*/}
           {/*  Your Cards*/}
           {/*</Heading>*/}
-          <Flex width="100%" justifyContent="space-around">
+          <Flex width="100%" justifyContent="space-around" flexWrap="wrap">
             {cards.map((card, i) => (
               <CharacterCard
                 character={card}
