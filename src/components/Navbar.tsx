@@ -41,7 +41,7 @@ export default function Navbar() {
 
   return (
     <>
-      <HStack width="100%" justifyContent="space-between" align="center">
+      <HStack width="100%" justifyContent="space-between" align="center" mb={3}>
         <Box flex="1 1 0">
           {mobile ? (
             <IconButton

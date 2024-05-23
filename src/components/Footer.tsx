@@ -19,7 +19,7 @@ export default function Footer({ condensed = false }) {
   const [mobile] = useMediaQuery("(orientation: portrait)");
 
   return (
-    <HStack width="100%" justifyContent="space-between">
+    <HStack width="100%" justifyContent="space-between" mt={3}>
       <Box flex="1 1 0">
         {condensed || mobile ? (
           <IconButton
