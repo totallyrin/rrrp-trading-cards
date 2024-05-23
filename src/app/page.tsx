@@ -14,9 +14,11 @@ export default function Home() {
   useEffect(() => {
     fetchAllCards()
       .then((cards) => {
-        const currentDate = new Date();
-        const dayNumber = currentDate.getDay();
-        setCard(cards[dayNumber % cards.length] as CardType);
+        const index =
+          Math.round(
+            (new Date().getTime() - new Date(0).getTime()) / (1000 * 3600 * 24),
+          ) % cards.length;
+        setCard(cards[index] as CardType);
       })
       .catch((error) => {
         console.error(error);
