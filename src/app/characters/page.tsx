@@ -81,8 +81,6 @@ export default function Characters() {
       </Center>
     );
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <SlideFade in={session && cards.length > 0}>
       <VStack width="100%">
