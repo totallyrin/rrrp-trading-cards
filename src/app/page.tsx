@@ -47,7 +47,7 @@ export default function Home() {
       )}
       <Button
         as={NextLink}
-        href="/Gallery"
+        href="/gallery"
         rightIcon={<ChevronRightIcon />}
         py={3}
       >

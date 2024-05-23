@@ -81,7 +81,7 @@ export default function Navbar() {
                 </Heading>
                 <MenuDivider />
                 <LinkBox>
-                  <LinkOverlay as={NextLink} href="#">
+                  <LinkOverlay as={NextLink} href="/account">
                     <MenuItem
                       as={Button}
                       textAlign="left"
@@ -136,7 +136,7 @@ export default function Navbar() {
               </Button>
               <Button
                 as={NextLink}
-                href="/Gallery"
+                href="/gallery"
                 width="100%"
                 variant="ghost"
                 justifyContent="space-between"
@@ -146,7 +146,7 @@ export default function Navbar() {
               </Button>
               <Button
                 as={NextLink}
-                href="/ManageCharacters"
+                href="/characters"
                 width="100%"
                 variant="ghost"
                 justifyContent="space-between"
