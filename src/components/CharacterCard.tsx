@@ -90,13 +90,6 @@ export default function CharacterCard({
             <Text fontSize="sm" textAlign="center">
               {character.special_interest ?? "Unknown"}
             </Text>
-            {character.fact_file && <Divider />}
-            {/*<Heading size="xs" textAlign="center">*/}
-            {/*  Fun Fact*/}
-            {/*</Heading>*/}
-            <Text as="i" fontSize="sm" textAlign="center">
-              {character.fact_file}
-            </Text>
           </VStack>
           <Divider orientation="vertical" mx={1} />
           <VStack flexGrow={1}>
