@@ -1,10 +1,22 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card as CardType } from "@/utils/types";
-import { fetchAllCards, fetchUserCards } from "@/app/lib/data";
 import {
+  deleteCard,
+  fetchAllCards,
+  fetchUserCards,
+  updateCard,
+} from "@/app/lib/data";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Badge,
   Box,
   Button,
   Center,
@@ -15,21 +27,23 @@ import {
   HStack,
   Input,
   SlideFade,
-  Slider,
-  SliderFilledTrack,
-  SliderMark,
-  SliderThumb,
-  SliderTrack,
   Spinner,
   Text,
   Textarea,
+  useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import CharacterCard from "@/components/CharacterCard";
+import CustomSlider from "@/components/CustomSlider";
 
 export default function Characters() {
   const { data: session } = useSession();
   const [cards, setCards] = useState<CardType[]>([]);
+  const [modalCard, setModalCard] = useState<CardType | undefined>(undefined);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
+  const toast = useToast();
 
   useEffect(() => {
     if (session?.user.role === "admin")
@@ -67,6 +81,8 @@ export default function Characters() {
       </Center>
     );
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <SlideFade in={session && cards.length > 0}>
       <VStack width="100%">
@@ -88,8 +104,8 @@ export default function Characters() {
               />
               <Flex flexDirection="column" pl={2} flexGrow={1}>
                 <FormControl>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
+                  <Box pb={1}>
+                    <Heading size="xs" p={2} pt={0}>
                       Character Name
                     </Heading>
                     <Input
@@ -242,236 +258,166 @@ export default function Characters() {
                   </Box>
                 </FormControl>
               </Flex>
-              <Flex flexDirection="column" px={2} flexGrow={2}>
-                <FormControl>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
-                      Strength
-                    </Heading>
-                    <Slider
-                      pl={2}
-                      pr={5}
-                      defaultValue={card.strength}
-                      step={1}
-                      min={1}
-                      max={10}
-                      onChange={(e) => {
-                        const updatedCards = cards.map((c) => {
-                          if (c.id === card.id) {
-                            return { ...c, strength: e };
-                          }
-                          return c;
+              <VStack height="100%" flexGrow={2}>
+                <Flex flexDirection="column" height="100%" width="100%">
+                  <FormControl>
+                    <CustomSlider
+                      card={card}
+                      cards={cards}
+                      setCards={setCards}
+                      title="Strength"
+                      attribute="strength"
+                      color="#FF595E"
+                    />
+                    <CustomSlider
+                      card={card}
+                      cards={cards}
+                      setCards={setCards}
+                      title="Comedic Timing"
+                      attribute="comedic_timing"
+                      color="#FF924C"
+                    />
+                    <CustomSlider
+                      card={card}
+                      cards={cards}
+                      setCards={setCards}
+                      title="Dirty Minded"
+                      attribute="dirty_minded"
+                      color="#FFCA3A"
+                    />
+                    <CustomSlider
+                      card={card}
+                      cards={cards}
+                      setCards={setCards}
+                      title="Accident Prone"
+                      attribute="accident_prone"
+                      color="#8AC926"
+                    />
+                    <CustomSlider
+                      card={card}
+                      cards={cards}
+                      setCards={setCards}
+                      title="Rizz"
+                      attribute="rizz"
+                      color="#1982C4"
+                    />
+                    <CustomSlider
+                      card={card}
+                      cards={cards}
+                      setCards={setCards}
+                      title="Serving"
+                      attribute="serving_cunt"
+                      color="#6A4C93"
+                    />
+                  </FormControl>
+                </Flex>
+                <HStack pt={5}>
+                  <Button
+                    colorScheme="green"
+                    onClick={() => {
+                      updateCard(card)
+                        .then(() => {
+                          toast({
+                            title: `${card.name} saved.`,
+                            status: "success",
+                            duration: 3000,
+                            isClosable: true,
+                          });
+                        })
+                        .catch((e) => {
+                          console.error(e);
+                          toast({
+                            title: `${card.name} failed to save.\n${e}`,
+                            status: "error",
+                            duration: 3000,
+                            isClosable: true,
+                          });
                         });
-                        setCards(updatedCards);
-                      }}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                        <SliderMark
-                          key={value}
-                          value={value}
-                          mt="1"
-                          alignContent="center"
-                        >
-                          {value}
-                        </SliderMark>
-                      ))}
-                      <SliderTrack>
-                        <SliderFilledTrack bg="#FF595E" />
-                      </SliderTrack>
-                      <SliderThumb />
-                    </Slider>
-                  </Box>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
-                      Comedic Timing
-                    </Heading>
-                    <Slider
-                      pl={2}
-                      pr={5}
-                      defaultValue={card.comedic_timing}
-                      step={1}
-                      min={1}
-                      max={10}
-                      onChange={(e) => {
-                        const updatedCards = cards.map((c) => {
-                          if (c.id === card.id) {
-                            return { ...c, comedic_timing: e };
-                          }
-                          return c;
-                        });
-                        setCards(updatedCards);
-                      }}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                        <SliderMark
-                          key={value}
-                          value={value}
-                          mt="1"
-                          alignContent="center"
-                        >
-                          {value}
-                        </SliderMark>
-                      ))}
-                      <SliderTrack>
-                        <SliderFilledTrack bg="#FF924C" />
-                      </SliderTrack>
-                      <SliderThumb />
-                    </Slider>
-                  </Box>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
-                      Dirty Minded
-                    </Heading>
-                    <Slider
-                      pl={2}
-                      pr={5}
-                      defaultValue={card.dirty_minded}
-                      step={1}
-                      min={1}
-                      max={10}
-                      onChange={(e) => {
-                        const updatedCards = cards.map((c) => {
-                          if (c.id === card.id) {
-                            return { ...c, dirty_minded: e };
-                          }
-                          return c;
-                        });
-                        setCards(updatedCards);
-                      }}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                        <SliderMark
-                          key={value}
-                          value={value}
-                          mt="1"
-                          alignContent="center"
-                        >
-                          {value}
-                        </SliderMark>
-                      ))}
-                      <SliderTrack>
-                        <SliderFilledTrack bg="#FFCA3A" />
-                      </SliderTrack>
-                      <SliderThumb />
-                    </Slider>
-                  </Box>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
-                      Accident Prone
-                    </Heading>
-                    <Slider
-                      pl={2}
-                      pr={5}
-                      defaultValue={card.accident_prone}
-                      step={1}
-                      min={1}
-                      max={10}
-                      onChange={(e) => {
-                        const updatedCards = cards.map((c) => {
-                          if (c.id === card.id) {
-                            return { ...c, accident_prone: e };
-                          }
-                          return c;
-                        });
-                        setCards(updatedCards);
-                      }}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                        <SliderMark
-                          key={value}
-                          value={value}
-                          mt="1"
-                          alignContent="center"
-                        >
-                          {value}
-                        </SliderMark>
-                      ))}
-                      <SliderTrack>
-                        <SliderFilledTrack bg="#8AC926" />
-                      </SliderTrack>
-                      <SliderThumb />
-                    </Slider>
-                  </Box>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
-                      Rizz
-                    </Heading>
-                    <Slider
-                      pl={2}
-                      pr={5}
-                      defaultValue={card.rizz}
-                      step={1}
-                      min={1}
-                      max={10}
-                      onChange={(e) => {
-                        const updatedCards = cards.map((c) => {
-                          if (c.id === card.id) {
-                            return { ...c, rizz: e };
-                          }
-                          return c;
-                        });
-                        setCards(updatedCards);
-                      }}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                        <SliderMark
-                          key={value}
-                          value={value}
-                          mt="1"
-                          alignContent="center"
-                        >
-                          {value}
-                        </SliderMark>
-                      ))}
-                      <SliderTrack>
-                        <SliderFilledTrack bg="#1982C4" />
-                      </SliderTrack>
-                      <SliderThumb />
-                    </Slider>
-                  </Box>
-                  <Box py={1}>
-                    <Heading size="xs" p={2}>
-                      Serving
-                    </Heading>
-                    <Slider
-                      pl={2}
-                      pr={5}
-                      defaultValue={card.serving_cunt}
-                      step={1}
-                      min={1}
-                      max={10}
-                      onChange={(e) => {
-                        const updatedCards = cards.map((c) => {
-                          if (c.id === card.id) {
-                            return { ...c, serving_cunt: e };
-                          }
-                          return c;
-                        });
-                        setCards(updatedCards);
-                      }}
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                        <SliderMark
-                          key={value}
-                          value={value}
-                          mt="1"
-                          alignContent="center"
-                        >
-                          {value}
-                        </SliderMark>
-                      ))}
-                      <SliderTrack>
-                        <SliderFilledTrack bg="#6A4C93" />
-                      </SliderTrack>
-                      <SliderThumb />
-                    </Slider>
-                  </Box>
-                </FormControl>
-              </Flex>
+                    }}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    onClick={() => {
+                      setModalCard(card);
+                      onOpen();
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </HStack>
+              </VStack>
             </HStack>
           </>
         ))}
       </VStack>
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        // @ts-ignore
+        leastDestructiveRef={cancelRef}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Character Card
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete{" "}
+              <Badge colorScheme="red" mr={0.5} mb={0.5}>
+                {modalCard?.name}
+              </Badge>
+              ? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                onClick={onClose}
+                // @ts-ignore
+                ref={cancelRef}
+              >
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  if (modalCard)
+                    deleteCard(modalCard)
+                      .then(() => {
+                        const updatedCards = cards.filter(
+                          (c) => c.id !== modalCard?.id,
+                        );
+                        setCards(updatedCards);
+                        toast({
+                          title: `${modalCard?.name} deleted.`,
+                          status: "success",
+                          duration: 3000,
+                          isClosable: true,
+                        });
+                      })
+                      .catch((e) => {
+                        console.error(e);
+                        toast({
+                          title: `${modalCard?.name} failed to delete.\n${e}`,
+                          status: "error",
+                          duration: 3000,
+                          isClosable: true,
+                        });
+                      });
+                  else console.log("no card to delete");
+                  onClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </SlideFade>
   );
 }
