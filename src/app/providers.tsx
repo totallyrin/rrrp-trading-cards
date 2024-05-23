@@ -1,7 +1,7 @@
 // app/providers.tsx
 "use client";
 
-import { Box, ChakraProvider, Spacer, VStack } from "@chakra-ui/react";
+import { Box, ChakraProvider, VStack } from "@chakra-ui/react";
 import React from "react";
 import theme from "@/utils/theme";
 import { SessionProvider } from "next-auth/react";
@@ -15,10 +15,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <VStack height="100vh" p={5}>
           <Navbar />
           {/*<Spacer />*/}
-          <Box width="100%" overflowY="auto">
+          <Box width="100%" overflowY="auto" height="100%">
             {children}
           </Box>
-          <Spacer />
+          {/*<Spacer />*/}
           <Footer />
         </VStack>
       </ChakraProvider>

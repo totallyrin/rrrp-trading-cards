@@ -26,7 +26,7 @@ export default function Home() {
   }, []);
 
   return (
-    <VStack height="100%" justifyContent="space-between">
+    <VStack height="100%" justifyContent="center">
       <Heading size="2xl">Card of the Day</Heading>
       {card ? (
         <CharacterCard
@@ -41,7 +41,7 @@ export default function Home() {
           }}
         />
       ) : (
-        <Center flexGrow={1}>
+        <Center my={50}>
           <Spinner />
         </Center>
       )}
