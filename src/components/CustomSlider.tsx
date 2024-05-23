@@ -33,7 +33,7 @@ export default function CustomSlider({
       </Heading>
       <Slider
         px={3}
-        defaultValue={Number(card[attribute])}
+        value={Number(card[attribute])}
         step={1}
         min={1}
         max={10}
