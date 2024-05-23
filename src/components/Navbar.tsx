@@ -19,6 +19,7 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  SkeletonCircle,
   useDisclosure,
   useMediaQuery,
   VStack,
@@ -68,11 +69,15 @@ export default function Navbar() {
                 isRound
                 aria-label="Profile"
                 icon={
-                  <Avatar
-                    size="sm"
-                    name={session?.user?.name ?? ""}
-                    src={session?.user?.image ?? ""}
-                  />
+                  session ? (
+                    <Avatar
+                      size="sm"
+                      name={session?.user?.name ?? ""}
+                      src={session?.user?.image ?? ""}
+                    />
+                  ) : (
+                    <SkeletonCircle size="8" />
+                  )
                 }
               />
               {session && (
