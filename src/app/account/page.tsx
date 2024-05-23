@@ -21,6 +21,8 @@ import { useEffect, useState } from "react";
 import { Card as CardType } from "@/utils/types";
 import { fetchUserCards } from "@/app/lib/data";
 import CharacterCard from "@/components/CharacterCard";
+import { EditIcon } from "@chakra-ui/icons";
+import NextLink from "next/link";
 
 export default function Account() {
   const { data: session } = useSession();
@@ -117,6 +119,14 @@ export default function Account() {
               />
             ))}
           </Flex>
+          <Button
+            as={NextLink}
+            href={"/characters"}
+            rightIcon={<EditIcon />}
+            mt={1}
+          >
+            Manage your characters
+          </Button>
         </VStack>
       </SlideFade>
     </VStack>
