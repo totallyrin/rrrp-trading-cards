@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import { Card as CardType } from "@/utils/types";
 import { fetchAllCards } from "@/app/lib/data";
-import { Button, Center, Heading, Spinner, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Heading,
+  SlideFade,
+  Spinner,
+  VStack,
+} from "@chakra-ui/react";
 import CharacterCard from "@/components/CharacterCard";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
@@ -29,20 +36,22 @@ export default function Home() {
     <VStack height="100%" justifyContent="center">
       <Heading size="2xl">Card of the Day</Heading>
       {card ? (
-        <CharacterCard
-          character={card}
-          sx={{
-            my: 5,
-            transform: "scale(1)",
-            transition: "all 0.2s ease-in-out",
-            _hover: {
-              transform: "scale(1.05)",
-            },
-          }}
-        />
+        <SlideFade in={!!card}>
+          <CharacterCard
+            character={card}
+            sx={{
+              my: 5,
+              transform: "scale(1)",
+              transition: "all 0.2s ease-in-out",
+              _hover: {
+                transform: "scale(1.05)",
+              },
+            }}
+          />
+        </SlideFade>
       ) : (
         <Center my={50}>
-          <Spinner size="xl" />
+          <Spinner size="xl" thickness="3px" />
         </Center>
       )}
       <Button
