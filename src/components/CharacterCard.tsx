@@ -47,7 +47,7 @@ export default function CharacterCard({
           mx={4}
           borderRadius="md"
           position="relative"
-          height={250}
+          height={[250, 450, 250]}
         >
           <Image
             src={character.image}
