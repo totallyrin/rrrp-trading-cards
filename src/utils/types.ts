@@ -15,4 +15,5 @@ export type Card = {
   relationship_status: string;
   quote: string;
   special_interest: string;
+  owner: string;
 };
