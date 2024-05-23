@@ -42,7 +42,7 @@ export default function Home() {
         />
       ) : (
         <Center my={50}>
-          <Spinner />
+          <Spinner size="xl" />
         </Center>
       )}
       <Button
