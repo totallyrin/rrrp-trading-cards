@@ -61,7 +61,7 @@ export default function Navbar() {
           </Heading>
         </Flex>
         <Flex flex="1 1 0" justifyContent="flex-end">
-          {session ? (
+          {session !== null ? (
             <Menu>
               <MenuButton
                 as={IconButton}
@@ -75,31 +75,33 @@ export default function Navbar() {
                   />
                 }
               />
-              <MenuList px={2}>
-                <Heading size="md" textAlign="center">
-                  {session?.user?.name}
-                </Heading>
-                <MenuDivider />
-                <LinkBox>
-                  <LinkOverlay as={NextLink} href="/account">
-                    <MenuItem
-                      as={Button}
-                      textAlign="left"
-                      rightIcon={<ChevronRightIcon />}
-                    >
-                      Account
-                    </MenuItem>
-                  </LinkOverlay>
-                </LinkBox>
-                <MenuItem
-                  as={Button}
-                  textAlign="left"
-                  rightIcon={<ChevronRightIcon />}
-                  onClick={() => signOut()}
-                >
-                  Sign out
-                </MenuItem>
-              </MenuList>
+              {session && (
+                <MenuList px={2}>
+                  <Heading size="md" textAlign="center">
+                    {session?.user?.name}
+                  </Heading>
+                  <MenuDivider />
+                  <LinkBox>
+                    <LinkOverlay as={NextLink} href="/account">
+                      <MenuItem
+                        as={Button}
+                        textAlign="left"
+                        rightIcon={<ChevronRightIcon />}
+                      >
+                        Account
+                      </MenuItem>
+                    </LinkOverlay>
+                  </LinkBox>
+                  <MenuItem
+                    as={Button}
+                    textAlign="left"
+                    rightIcon={<ChevronRightIcon />}
+                    onClick={() => signOut()}
+                  >
+                    Sign out
+                  </MenuItem>
+                </MenuList>
+              )}
             </Menu>
           ) : (
             <Button rightIcon={<ChevronRightIcon />} onClick={() => signIn()}>
