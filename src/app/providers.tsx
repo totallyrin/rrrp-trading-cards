@@ -12,10 +12,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <ChakraProvider theme={theme}>
-        <VStack height="100vh" p={5}>
+        <VStack height="100vh">
           <Navbar />
           {/*<Spacer />*/}
-          <Box width="100%" overflowY="auto" height="100%">
+          <Box width="100%" overflowY="auto" height="100%" px={5}>
             {children}
           </Box>
           {/*<Spacer />*/}
