@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import DiscordProvider from "next-auth/providers/discord";
 import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";
@@ -26,20 +25,20 @@ const handler = NextAuth({
     updateAge: 60 * 60 * 24, // 24 hours
   },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-      allowDangerousEmailAccountLinking: true,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          role: "user",
-        };
-      },
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+    //   allowDangerousEmailAccountLinking: true,
+    //   profile(profile) {
+    //     return {
+    //       id: profile.sub,
+    //       name: profile.name,
+    //       email: profile.email,
+    //       image: profile.picture,
+    //       role: "user",
+    //     };
+    //   },
+    // }),
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
