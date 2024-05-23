@@ -24,16 +24,17 @@ export default function Home() {
   }, []);
 
   return (
-    <VStack py={10} height="100%">
-      <Heading mb={10}>Card of the Day</Heading>
+    <VStack py={10} height="100%" justifyContent="space-between">
+      <Heading>Card of the Day</Heading>
       {card ? (
         <CharacterCard
           character={card}
           sx={{
+            my: 5,
             transform: "scale(1)",
             transition: "all 0.2s ease-in-out",
             _hover: {
-              transform: "scale(1.1)",
+              transform: "scale(1.05)",
             },
           }}
         />
@@ -46,7 +47,7 @@ export default function Home() {
         as={NextLink}
         href="/Gallery"
         rightIcon={<ChevronRightIcon />}
-        mt={10}
+        py={3}
       >
         See all cards
       </Button>
