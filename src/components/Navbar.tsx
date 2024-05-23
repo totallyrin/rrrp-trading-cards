@@ -20,11 +20,13 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
+  useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import {
   ChevronRightIcon,
   CloseIcon,
+  DragHandleIcon,
   EditIcon,
   HamburgerIcon,
 } from "@chakra-ui/icons";
@@ -35,25 +37,28 @@ import { signIn, signOut, useSession } from "next-auth/react";
 export default function Navbar() {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [mobile] = useMediaQuery("(orientation: portrait)");
 
   return (
     <>
       <HStack width="100%" justifyContent="space-between" align="center">
         <Box flex="1 1 0">
-          <IconButton
-            aria-label="Menu"
-            icon={<HamburgerIcon />}
-            onClick={onOpen}
-          />
+          {mobile ? (
+            <IconButton
+              aria-label="Menu"
+              icon={<HamburgerIcon />}
+              onClick={onOpen}
+            />
+          ) : (
+            <Button leftIcon={<HamburgerIcon />} onClick={onOpen}>
+              Menu
+            </Button>
+          )}
         </Box>
         <Flex flex="1 1 0" justifyContent="center">
-          <LinkBox>
-            <LinkOverlay as={NextLink} href="/">
-              <Heading size="lg" textAlign="center">
-                RRRP Top Trumps
-              </Heading>
-            </LinkOverlay>
-          </LinkBox>
+          <Heading as={NextLink} href="/" size="lg" textAlign="center">
+            RRRP Top Trumps
+          </Heading>
         </Flex>
         <Flex flex="1 1 0" justifyContent="flex-end">
           {session ? (
@@ -128,6 +133,16 @@ export default function Navbar() {
                 // rightIcon={<StarIcon />}
               >
                 Home
+              </Button>
+              <Button
+                as={NextLink}
+                href="/Gallery"
+                width="100%"
+                variant="ghost"
+                justifyContent="space-between"
+                rightIcon={<DragHandleIcon />}
+              >
+                Gallery
               </Button>
               <Button
                 as={NextLink}
