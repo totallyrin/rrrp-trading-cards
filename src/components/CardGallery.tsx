@@ -18,7 +18,7 @@ export default function CardGallery() {
   }, []);
 
   return (
-    <SimpleGrid minChildWidth={350} spacing={2} width="100%">
+    <SimpleGrid minChildWidth={300} spacing={2} width="100%">
       {cards.map((card, i) => (
         <CharacterCard
           character={card}

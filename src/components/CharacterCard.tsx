@@ -1,10 +1,10 @@
 import { Card as Character } from "@/utils/types";
 import {
+  AspectRatio,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Center,
   Divider,
   Heading,
   HStack,
@@ -42,20 +42,23 @@ export default function CharacterCard({
       </CardHeader>
 
       {character.image ? (
-        <Center
+        <AspectRatio
           borderWidth="3px"
           mx={4}
           borderRadius="md"
           position="relative"
-          height={[250, 400, 250]}
+          ratio={3 / 2}
         >
           <Image
             src={character.image}
             alt={character.name}
             fill
             borderRadius="sm"
+            sx={{
+              objectFit: "cover",
+            }}
           />
-        </Center>
+        </AspectRatio>
       ) : (
         <Spacer />
       )}
