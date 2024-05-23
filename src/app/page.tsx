@@ -24,8 +24,8 @@ export default function Home() {
   }, []);
 
   return (
-    <VStack py={10} height="100%" justifyContent="space-between">
-      <Heading>Card of the Day</Heading>
+    <VStack height="100%" justifyContent="space-between">
+      <Heading size="2xl">Card of the Day</Heading>
       {card ? (
         <CharacterCard
           character={card}
