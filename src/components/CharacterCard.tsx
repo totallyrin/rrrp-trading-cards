@@ -28,6 +28,8 @@ export default function CharacterCard({
       variant="filled"
       sx={{
         ...sx,
+        minWidth: 300,
+        maxWidth: 500,
       }}
     >
       <CardHeader>
