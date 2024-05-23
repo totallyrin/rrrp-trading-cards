@@ -1,22 +1,8 @@
-import { fetchAllCards } from "@/app/lib/data";
-import { useEffect, useState } from "react";
 import { SimpleGrid } from "@chakra-ui/react";
 import { Card as CardType } from "@/utils/types";
 import CharacterCard from "@/components/CharacterCard";
 
-export default function CardGallery() {
-  const [cards, setCards] = useState<CardType[]>([]);
-
-  useEffect(() => {
-    fetchAllCards()
-      .then((cards) => {
-        setCards(cards as CardType[]);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
+export default function CardGallery({ cards }: { cards: CardType[] }) {
   return (
     <SimpleGrid minChildWidth={300} spacing={2} width="100%">
       {cards.map((card, i) => (
