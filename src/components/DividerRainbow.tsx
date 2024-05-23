@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 
 export default function DividerRainbow({ size = 2 }) {
-  const alpha = 0.75;
+  const alpha = 1;
 
   return (
     <Flex height={size} width="100%">
