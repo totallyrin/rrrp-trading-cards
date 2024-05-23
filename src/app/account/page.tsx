@@ -4,21 +4,39 @@ import {
   Avatar,
   Badge,
   Button,
+  Divider,
+  Flex,
   Heading,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
+  SlideFade,
   Tag,
   Text,
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Card as CardType } from "@/utils/types";
+import { fetchUserCards } from "@/app/lib/data";
+import CharacterCard from "@/components/CharacterCard";
 
 export default function Account() {
   const { data: session } = useSession();
   const [showEmail, setShowEmail] = useState(false);
+  const [cards, setCards] = useState<CardType[]>([]);
+
+  useEffect(() => {
+    if (session?.user.name)
+      fetchUserCards(session.user.name)
+        .then((cards) => {
+          setCards(cards as CardType[]);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  }, [session]);
 
   if (session === null)
     return (
@@ -78,6 +96,29 @@ export default function Account() {
       ) : (
         <Skeleton width={75} height={6} />
       )}
+      <SlideFade in={cards.length > 0}>
+        <VStack>
+          <Divider my={1} />
+          {/*<Heading size="md" mb={1}>*/}
+          {/*  Your Cards*/}
+          {/*</Heading>*/}
+          <Flex width="100%" justifyContent="space-around">
+            {cards.map((card, i) => (
+              <CharacterCard
+                character={card}
+                key={i}
+                sx={{
+                  transform: "scale(0.96)",
+                  transition: "all 0.2s ease-in-out",
+                  _hover: {
+                    transform: "scale(1)",
+                  },
+                }}
+              />
+            ))}
+          </Flex>
+        </VStack>
+      </SlideFade>
     </VStack>
   );
 }
