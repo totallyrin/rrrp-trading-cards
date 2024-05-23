@@ -27,6 +27,7 @@ import {
 import {
   ChevronRightIcon,
   CloseIcon,
+  CopyIcon,
   DragHandleIcon,
   EditIcon,
   HamburgerIcon,
@@ -159,6 +160,16 @@ export default function Navbar() {
                 rightIcon={<DragHandleIcon />}
               >
                 Gallery
+              </Button>
+              <Button
+                as={NextLink}
+                href="/compare"
+                width="100%"
+                variant="ghost"
+                justifyContent="space-between"
+                rightIcon={<CopyIcon />}
+              >
+                Compare
               </Button>
               <Button
                 as={NextLink}
