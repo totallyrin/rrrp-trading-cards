@@ -22,7 +22,7 @@ export default function Footer({ condensed = false }) {
   return (
     <Flex direction="column" width="100%" mt={3}>
       {!condensed && <DividerRainbow />}
-      <HStack width="100%" justifyContent="space-between" p={5}>
+      <HStack width="100%" justifyContent="space-between" p={condensed ? 0 : 5}>
         <Box flex="1 1 0">
           {condensed || mobile ? (
             <IconButton
