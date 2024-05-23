@@ -53,6 +53,8 @@ export default function CharacterCard({
             src={character.image}
             alt={character.name}
             fill
+            sizes="450px"
+            priority={false}
             borderRadius="sm"
             sx={{
               objectFit: "cover",
