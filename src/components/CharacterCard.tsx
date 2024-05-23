@@ -35,7 +35,7 @@ export default function CharacterCard({
       <CardHeader>
         <HStack justifyContent="space-between" alignItems="flex-start">
           <Heading size="sm">{character.name}</Heading>
-          {character.pronouns.trim() !== "" && (
+          {character.pronouns && (
             <Tag whiteSpace="nowrap" size="sm">
               {character.pronouns}
             </Tag>
