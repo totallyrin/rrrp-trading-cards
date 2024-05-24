@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card as CardType } from "@/utils/types";
 import {
   deleteCard,
@@ -50,7 +50,7 @@ export default function Characters() {
   const [modalCard, setModalCard] = useState<CardType | undefined>(undefined);
   const [searchText, setSearchText] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef();
+  const cancelRef = useRef();
   const toast = useToast();
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function Characters() {
         .catch((error) => {
           console.error(error);
         });
-  }, [session]);
+  }, [session?.user.role, session?.user.name]);
 
   if (session === null)
     return (
@@ -97,33 +97,37 @@ export default function Characters() {
   return (
     <>
       {session.user.role === "admin" && (
-        <Tabs>
-          <TabList mb={4}>
-            <Tab
-              onClick={() =>
-                setCards(
-                  cards.filter((card) => card.owner === session.user.name),
-                )
-              }
-            >
-              My characters
-            </Tab>
-            <Tab onClick={() => setCards(allCards)}>All characters</Tab>
-          </TabList>
-        </Tabs>
-      )}
-      <SlideFade in={session && cards.length > 0}>
-        <VStack width="100%">
-          <InputGroup mb={1}>
+        <>
+          <Tabs>
+            <TabList mb={4}>
+              <Tab
+                onClick={() =>
+                  setCards(
+                    cards.filter((card) => card.owner === session.user.name),
+                  )
+                }
+              >
+                My characters
+              </Tab>
+              <Tab onClick={() => setCards(allCards)}>All characters</Tab>
+            </TabList>
+          </Tabs>
+          <InputGroup mb={3}>
             <InputLeftElement pointerEvents="none">
               <Search2Icon color="gray.300" />
             </InputLeftElement>
             <Input
               type="text"
               placeholder="Search by name"
-              onChange={(e) => setSearchText(e.target.value)}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+              }}
             />
           </InputGroup>
+        </>
+      )}
+      <SlideFade in={session && cards.length > 0}>
+        <VStack width="100%">
           {cards
             .filter((card) =>
               card.name.toLowerCase().includes(searchText.toLowerCase()),
@@ -157,7 +161,7 @@ export default function Characters() {
                         </Heading>
                         <Input
                           placeholder="Name"
-                          value={card.name}
+                          value={card.name ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
@@ -176,7 +180,7 @@ export default function Characters() {
                         </Heading>
                         <Input
                           placeholder="they/them"
-                          value={card.pronouns}
+                          value={card.pronouns ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
@@ -194,7 +198,7 @@ export default function Characters() {
                         </Heading>
                         <Input
                           placeholder="https://example.com/image.jpg"
-                          value={card.image}
+                          value={card.image ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
@@ -213,7 +217,7 @@ export default function Characters() {
                         </Heading>
                         <Input
                           placeholder="Unemployed"
-                          value={card.occupation}
+                          value={card.occupation ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
@@ -237,7 +241,7 @@ export default function Characters() {
                         </Heading>
                         <Input
                           placeholder="Valentine"
-                          value={card.residence}
+                          value={card.residence ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
@@ -261,7 +265,7 @@ export default function Characters() {
                         </Heading>
                         <Input
                           placeholder="Hobbies/interests"
-                          value={card.special_interest}
+                          value={card.special_interest ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
@@ -285,7 +289,7 @@ export default function Characters() {
                         </Heading>
                         <Textarea
                           placeholder="Be gay, do crime!"
-                          value={card.quote}
+                          value={card.quote ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
