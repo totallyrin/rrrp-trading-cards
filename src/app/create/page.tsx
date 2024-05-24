@@ -100,7 +100,7 @@ export default function Create() {
             }}
           />
         </VStack>
-        <Flex flexDirection="column" pl={2} flexGrow={1}>
+        <Flex flexDirection="column" pl={2} flexGrow={5}>
           <FormControl>
             <Box pb={1}>
               <Heading size="xs" p={2} pt={0}>
@@ -212,7 +212,7 @@ export default function Create() {
           </FormControl>
         </Flex>
       </HStack>
-      <VStack flexGrow={2} justifyContent="center" width="100%">
+      <VStack justifyContent="center" width="100%">
         <Flex flexDirection="column" width="100%" mb={5}>
           <FormControl>
             <CustomSlider

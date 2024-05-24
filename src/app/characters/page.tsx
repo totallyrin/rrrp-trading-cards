@@ -154,7 +154,7 @@ export default function Characters() {
                       }}
                     />
                   </VStack>
-                  <Flex flexDirection="column" pl={2} flexGrow={1}>
+                  <Flex flexDirection="column" pl={2} flexGrow={2}>
                     <FormControl>
                       <Box pb={1}>
                         <Heading size="xs" p={2} pt={0}>
@@ -310,7 +310,7 @@ export default function Characters() {
                       </Box>
                     </FormControl>
                   </Flex>
-                  <VStack height="100%" flexGrow={2}>
+                  <VStack height="100%" flexGrow={3}>
                     <Flex flexDirection="column" height="100%" width="100%">
                       <FormControl>
                         <CustomSlider
