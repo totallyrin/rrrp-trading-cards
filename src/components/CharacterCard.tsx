@@ -5,6 +5,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Center,
   Divider,
   Heading,
   HStack,
@@ -49,17 +50,21 @@ export default function CharacterCard({
         position="relative"
         ratio={3 / 2}
       >
-        <Image
-          src={character.image ?? ""}
-          alt={character.name}
-          fill
-          sizes="450px"
-          priority={false}
-          borderRadius="sm"
-          sx={{
-            objectFit: "cover",
-          }}
-        />
+        {character.image ? (
+          <Image
+            src={character.image}
+            alt={character.name}
+            fill
+            sizes="450px"
+            priority={false}
+            borderRadius="sm"
+            sx={{
+              objectFit: "cover",
+            }}
+          />
+        ) : (
+          <Center>{character.name}</Center>
+        )}
       </AspectRatio>
 
       <CardBody>
