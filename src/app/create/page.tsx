@@ -261,24 +261,33 @@ export default function Create() {
           colorScheme="green"
           rightIcon={<PlusSquareIcon />}
           onClick={() => {
-            addCard({ ...card, owner: session.user.name ?? "" })
-              .then(() => {
-                toast({
-                  title: `${card.name} created.`,
-                  status: "success",
-                  duration: 3000,
-                  isClosable: true,
+            if (card.name.length > 0)
+              addCard({ ...card, owner: session.user.name ?? "" })
+                .then(() => {
+                  toast({
+                    title: `${card.name} created.`,
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                  });
+                })
+                .catch((e) => {
+                  console.error(e);
+                  toast({
+                    title: `${card.name} could not be created.\n${e}`,
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                  });
                 });
-              })
-              .catch((e) => {
-                console.error(e);
-                toast({
-                  title: `${card.name} could not be created.\n${e}`,
-                  status: "error",
-                  duration: 3000,
-                  isClosable: true,
-                });
+            else {
+              toast({
+                title: "Name cannot be empty.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
               });
+            }
           }}
         >
           Create Character
