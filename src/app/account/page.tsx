@@ -2,7 +2,6 @@
 
 import {
   Avatar,
-  Badge,
   Button,
   Divider,
   Flex,
@@ -13,7 +12,6 @@ import {
   SlideFade,
   Tag,
   Text,
-  Tooltip,
   VStack,
 } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
@@ -67,29 +65,6 @@ export default function Account() {
           skeletonHeight={10}
           width={200}
           mt={1}
-          borderRadius="md"
-        />
-      )}
-      {session ? (
-        <Tooltip
-          label={`Click to ${showEmail ? "hide" : "show"} email`}
-          closeOnClick={false}
-        >
-          <Badge mb={1} onClick={() => setShowEmail(!showEmail)}>
-            {showEmail
-              ? session?.user.email
-              : session?.user.email?.replace(
-                  /(@[^@](?=[^@]*$)|\.[^.]+$)|./g,
-                  (x, y) => y || "*",
-                )}
-          </Badge>
-        </Tooltip>
-      ) : (
-        <SkeletonText
-          noOfLines={1}
-          skeletonHeight={5}
-          width={[350, 400]}
-          my={0.5}
           borderRadius="md"
         />
       )}
