@@ -81,131 +81,137 @@ export default function Create() {
     );
 
   return (
-    <HStack width="100%" alignItems="center" flexWrap="wrap">
-      <CharacterCard
-        character={card}
-        sx={{
-          width: "30%",
-          // transform: "scale(0.96)",
-          transition: "all 0.2s ease-in-out",
-          _hover: {
-            // transform: "scale(1)",
-          },
-        }}
-      />
-      <Flex flexDirection="column" pl={2} flexGrow={1}>
-        <FormControl>
-          <Box pb={1}>
-            <Heading size="xs" p={2} pt={0}>
-              Character Name
-            </Heading>
-            <Input
-              placeholder="Name"
-              value={card.name ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  name: e.target.value,
-                })
-              }
-              isRequired
-            />
-          </Box>
-          <Box py={1}>
-            <Heading size="xs" p={2}>
-              Pronouns
-            </Heading>
-            <Input
-              placeholder="they/them"
-              value={card.pronouns ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  pronouns: e.target.value,
-                })
-              }
-            />
-          </Box>
-          <Box py={1}>
-            <Heading size="xs" p={2}>
-              Image Link
-            </Heading>
-            <Input
-              placeholder="https://example.com/image.jpg"
-              value={card.image ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  image: e.target.value,
-                })
-              }
-              isDisabled={session.user.role !== "admin"}
-            />
-          </Box>
-          <Box py={1}>
-            <Heading size="xs" p={2}>
-              Occupation
-            </Heading>
-            <Input
-              placeholder="Unemployed"
-              value={card.occupation ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  occupation: e.target.value,
-                })
-              }
-            />
-          </Box>
-          <Box py={1}>
-            <Heading size="xs" p={2}>
-              Residence
-            </Heading>
-            <Input
-              placeholder="Valentine"
-              value={card.residence ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  residence: e.target.value,
-                })
-              }
-            />
-          </Box>
-          <Box py={1}>
-            <Heading size="xs" p={2}>
-              Special Interests
-            </Heading>
-            <Input
-              placeholder="Hobbies/interests"
-              value={card.special_interest ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  special_interest: e.target.value,
-                })
-              }
-            />
-          </Box>
-          <Box py={1}>
-            <Heading size="xs" p={2}>
-              Character Quote
-            </Heading>
-            <Textarea
-              placeholder="Be gay, do crime!"
-              value={card.quote ?? ""}
-              onChange={(e) =>
-                setCard({
-                  ...card,
-                  quote: e.target.value,
-                })
-              }
-            />
-          </Box>
-        </FormControl>
-      </Flex>
-      <VStack height="100%" flexGrow={2}>
-        <Flex flexDirection="column" height="100%" width="100%">
+    <VStack
+      height="100%"
+      justifyContent="center"
+      px={[0, 0, 0, 125, 250, 500, 1000]}
+    >
+      <HStack width="100%" alignItems="center" flexWrap="wrap">
+        <CharacterCard
+          character={card}
+          sx={{
+            width: "30%",
+            // transform: "scale(0.96)",
+            transition: "all 0.2s ease-in-out",
+            _hover: {
+              // transform: "scale(1)",
+            },
+          }}
+        />
+        <Flex flexDirection="column" pl={2} flexGrow={1}>
+          <FormControl>
+            <Box pb={1}>
+              <Heading size="xs" p={2} pt={0}>
+                Character Name
+              </Heading>
+              <Input
+                placeholder="Name"
+                value={card.name ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    name: e.target.value,
+                  })
+                }
+                isRequired
+              />
+            </Box>
+            <Box py={1}>
+              <Heading size="xs" p={2}>
+                Pronouns
+              </Heading>
+              <Input
+                placeholder="they/them"
+                value={card.pronouns ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    pronouns: e.target.value,
+                  })
+                }
+              />
+            </Box>
+            <Box py={1}>
+              <Heading size="xs" p={2}>
+                Image Link
+              </Heading>
+              <Input
+                placeholder="https://example.com/image.jpg"
+                value={card.image ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    image: e.target.value,
+                  })
+                }
+                isDisabled={session.user.role !== "admin"}
+              />
+            </Box>
+            <Box py={1}>
+              <Heading size="xs" p={2}>
+                Occupation
+              </Heading>
+              <Input
+                placeholder="Unemployed"
+                value={card.occupation ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    occupation: e.target.value,
+                  })
+                }
+              />
+            </Box>
+            <Box py={1}>
+              <Heading size="xs" p={2}>
+                Residence
+              </Heading>
+              <Input
+                placeholder="Valentine"
+                value={card.residence ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    residence: e.target.value,
+                  })
+                }
+              />
+            </Box>
+            <Box py={1}>
+              <Heading size="xs" p={2}>
+                Special Interests
+              </Heading>
+              <Input
+                placeholder="Hobbies/interests"
+                value={card.special_interest ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    special_interest: e.target.value,
+                  })
+                }
+              />
+            </Box>
+            <Box py={1}>
+              <Heading size="xs" p={2}>
+                Character Quote
+              </Heading>
+              <Textarea
+                placeholder="Be gay, do crime!"
+                value={card.quote ?? ""}
+                onChange={(e) =>
+                  setCard({
+                    ...card,
+                    quote: e.target.value,
+                  })
+                }
+              />
+            </Box>
+          </FormControl>
+        </Flex>
+      </HStack>
+      <VStack flexGrow={2} justifyContent="center" width="100%">
+        <Flex flexDirection="column" width="100%" mb={5}>
           <FormControl>
             <CustomSlider
               card={card}
@@ -251,35 +257,33 @@ export default function Create() {
             />
           </FormControl>
         </Flex>
-        <HStack pt={5}>
-          <Button
-            colorScheme="green"
-            rightIcon={<PlusSquareIcon />}
-            onClick={() => {
-              addCard({ ...card, owner: session.user.name ?? "" })
-                .then(() => {
-                  toast({
-                    title: `${card.name} created.`,
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                  });
-                })
-                .catch((e) => {
-                  console.error(e);
-                  toast({
-                    title: `${card.name} could not be created.\n${e}`,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                  });
+        <Button
+          colorScheme="green"
+          rightIcon={<PlusSquareIcon />}
+          onClick={() => {
+            addCard({ ...card, owner: session.user.name ?? "" })
+              .then(() => {
+                toast({
+                  title: `${card.name} created.`,
+                  status: "success",
+                  duration: 3000,
+                  isClosable: true,
                 });
-            }}
-          >
-            Create Character
-          </Button>
-        </HStack>
+              })
+              .catch((e) => {
+                console.error(e);
+                toast({
+                  title: `${card.name} could not be created.\n${e}`,
+                  status: "error",
+                  duration: 3000,
+                  isClosable: true,
+                });
+              });
+          }}
+        >
+          Create Character
+        </Button>
       </VStack>
-    </HStack>
+    </VStack>
   );
 }
