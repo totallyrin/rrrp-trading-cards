@@ -29,7 +29,7 @@ export default function CustomSlider({
   color: string;
 }) {
   return (
-    <Box py={2} width="95%">
+    <Box py={2} width={["96%", "97%", "98%"]}>
       <Heading size="xs" p={2} pb={0}>
         {title}
       </Heading>
