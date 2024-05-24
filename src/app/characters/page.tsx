@@ -96,9 +96,21 @@ export default function Characters() {
 
   return (
     <Center width="100%">
-      <Box width={["100%", "100%", "100%", "80%", "60%"]}>
+      <Box width={["100%", "100%", "100%", "80%", "60%"]} height="100%">
         {session.user.role === "admin" && (
           <>
+            <InputGroup mb={1}>
+              <InputLeftElement pointerEvents="none">
+                <Search2Icon color="gray.300" />
+              </InputLeftElement>
+              <Input
+                type="text"
+                placeholder="Search by name"
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+              />
+            </InputGroup>
             <Tabs>
               <TabList mb={4}>
                 <Tab
@@ -113,22 +125,10 @@ export default function Characters() {
                 <Tab onClick={() => setCards(allCards)}>All characters</Tab>
               </TabList>
             </Tabs>
-            <InputGroup mb={3}>
-              <InputLeftElement pointerEvents="none">
-                <Search2Icon color="gray.300" />
-              </InputLeftElement>
-              <Input
-                type="text"
-                placeholder="Search by name"
-                onChange={(e) => {
-                  setSearchText(e.target.value);
-                }}
-              />
-            </InputGroup>
           </>
         )}
         <SlideFade in={session && cards.length > 0}>
-          <VStack width="100%">
+          <VStack width="100%" overflowY="auto">
             {cards
               .filter((card) =>
                 card.name.toLowerCase().includes(searchText.toLowerCase()),
