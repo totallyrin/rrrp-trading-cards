@@ -8,7 +8,6 @@ import {
   Divider,
   Heading,
   HStack,
-  Spacer,
   SystemStyleObject,
   Tag,
   Text,
@@ -43,29 +42,25 @@ export default function CharacterCard({
         </HStack>
       </CardHeader>
 
-      {character.image ? (
-        <AspectRatio
-          borderWidth="3px"
-          mx={4}
-          borderRadius="md"
-          position="relative"
-          ratio={3 / 2}
-        >
-          <Image
-            src={character.image}
-            alt={character.name}
-            fill
-            sizes="450px"
-            priority={false}
-            borderRadius="sm"
-            sx={{
-              objectFit: "cover",
-            }}
-          />
-        </AspectRatio>
-      ) : (
-        <Spacer />
-      )}
+      <AspectRatio
+        borderWidth="3px"
+        mx={4}
+        borderRadius="md"
+        position="relative"
+        ratio={3 / 2}
+      >
+        <Image
+          src={character.image ?? ""}
+          alt={character.name}
+          fill
+          sizes="450px"
+          priority={false}
+          borderRadius="sm"
+          sx={{
+            objectFit: "cover",
+          }}
+        />
+      </AspectRatio>
 
       <CardBody>
         <HStack height="100%">
