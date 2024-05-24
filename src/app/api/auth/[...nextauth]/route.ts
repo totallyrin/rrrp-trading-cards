@@ -49,7 +49,7 @@ const handler = NextAuth({
   callbacks: {
     async session({ session }) {
       const role =
-        await sql`SELECT role FROM users WHERE email = ${session.user.email}`;
+        await sql`SELECT role FROM users WHERE name = ${session.user.name}`;
       session.user.role = role?.rows[0]?.role ?? "user";
       const userId =
         await sql`SELECT id FROM users WHERE name = ${session.user.name}`;
