@@ -4,6 +4,7 @@ import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";
 import { Adapter } from "next-auth/adapters";
 import { sql } from "@vercel/postgres";
+import { getUserGuild } from "@/utils/api";
 
 const pool = new Pool({
   host: process.env.POSTGRES_HOST,
@@ -24,32 +25,23 @@ const handler = NextAuth({
     maxAge: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // 24 hours
   },
+  pages: {
+    signIn: "/auth/signin",
+  },
   providers: [
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    //   allowDangerousEmailAccountLinking: true,
-    //   profile(profile) {
-    //     return {
-    //       id: profile.sub,
-    //       name: profile.name,
-    //       email: profile.email,
-    //       image: profile.picture,
-    //       role: "user",
-    //     };
-    //   },
-    // }),
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
+      authorization: process.env.DISCORD_URL ?? "",
       allowDangerousEmailAccountLinking: true,
       profile(profile) {
         return {
+          ...profile,
           id: profile.id,
           name: profile.username,
-          email: profile.email,
           image: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
           role: "user",
+          guild: {},
         };
       },
     }),
@@ -59,6 +51,14 @@ const handler = NextAuth({
       const role =
         await sql`SELECT role FROM users WHERE email = ${session.user.email}`;
       session.user.role = role?.rows[0]?.role ?? "user";
+      const userId =
+        await sql`SELECT id FROM users WHERE name = ${session.user.name}`;
+      const token =
+        await sql`SELECT access_token, "providerAccountId" FROM accounts WHERE "userId" = ${userId.rows[0]?.id}`.then();
+      getUserGuild(token?.rows[0]?.access_token).then((guild) => {
+        session.user.guild = guild;
+        console.log(guild);
+      });
       return session;
     },
   },
