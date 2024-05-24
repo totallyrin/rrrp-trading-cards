@@ -86,18 +86,20 @@ export default function Create() {
       justifyContent="center"
       px={[0, 0, 0, 125, 250, 500, 1000]}
     >
-      <HStack width="100%" alignItems="center" flexWrap="wrap">
-        <CharacterCard
-          character={card}
-          sx={{
-            width: "30%",
-            // transform: "scale(0.96)",
-            transition: "all 0.2s ease-in-out",
-            _hover: {
-              // transform: "scale(1)",
-            },
-          }}
-        />
+      <HStack width="100%" height="100%" flexWrap="wrap">
+        <VStack flexGrow={1}>
+          <CharacterCard
+            character={card}
+            sx={{
+              width: "100%",
+              // transform: "scale(0.96)",
+              transition: "all 0.2s ease-in-out",
+              _hover: {
+                // transform: "scale(1)",
+              },
+            }}
+          />
+        </VStack>
         <Flex flexDirection="column" pl={2} flexGrow={1}>
           <FormControl>
             <Box pb={1}>

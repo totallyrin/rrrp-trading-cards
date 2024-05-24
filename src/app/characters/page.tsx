@@ -141,18 +141,19 @@ export default function Characters() {
                   flexWrap="wrap"
                   key={i}
                 >
-                  <CharacterCard
-                    key={card.id}
-                    character={card}
-                    sx={{
-                      width: "30%",
-                      // transform: "scale(0.96)",
-                      transition: "all 0.2s ease-in-out",
-                      _hover: {
-                        // transform: "scale(1)",
-                      },
-                    }}
-                  />
+                  <VStack flexGrow={1}>
+                    <CharacterCard
+                      character={card}
+                      sx={{
+                        width: "100%",
+                        // transform: "scale(0.96)",
+                        transition: "all 0.2s ease-in-out",
+                        _hover: {
+                          // transform: "scale(1)",
+                        },
+                      }}
+                    />
+                  </VStack>
                   <Flex flexDirection="column" pl={2} flexGrow={1}>
                     <FormControl>
                       <Box pb={1}>
