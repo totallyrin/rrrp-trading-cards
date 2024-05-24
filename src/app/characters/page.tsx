@@ -418,7 +418,7 @@ export default function Characters() {
 
               <AlertDialogBody>
                 Are you sure you want to delete
-                <Badge colorScheme="red" mr={0.5} mb={0.5}>
+                <Badge colorScheme="red" ml={1} mr={0.5} mb={0.5}>
                   {modalCard?.name}
                 </Badge>
                 ? You can&apos;t undo this action afterwards.

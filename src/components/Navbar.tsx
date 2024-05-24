@@ -31,6 +31,7 @@ import {
   DragHandleIcon,
   EditIcon,
   HamburgerIcon,
+  PlusSquareIcon,
 } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import Footer from "@/components/Footer";
@@ -170,6 +171,16 @@ export default function Navbar() {
                 rightIcon={<CopyIcon />}
               >
                 Compare
+              </Button>
+              <Button
+                as={NextLink}
+                href="/create"
+                width="100%"
+                variant="ghost"
+                justifyContent="space-between"
+                rightIcon={<PlusSquareIcon />}
+              >
+                Create Character
               </Button>
               <Button
                 as={NextLink}
