@@ -308,6 +308,32 @@ export default function Characters() {
                           }}
                         />
                       </Box>
+                      {session.user.role === "admin" && (
+                        <Box py={1}>
+                          <Heading size="xs" p={2}>
+                            Owner
+                          </Heading>
+                          <Input
+                            placeholder="username"
+                            value={card.owner ?? ""}
+                            onChange={(e) => {
+                              const updatedCards = cards.map((c) => {
+                                if (c.id === card.id) {
+                                  return {
+                                    ...c,
+                                    owner:
+                                      e.target.value.length > 0
+                                        ? e.target.value
+                                        : undefined,
+                                  };
+                                }
+                                return c;
+                              });
+                              setCards(updatedCards);
+                            }}
+                          />
+                        </Box>
+                      )}
                     </FormControl>
                   </Flex>
                   <VStack height="100%" flexGrow={3}>

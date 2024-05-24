@@ -205,6 +205,23 @@ export default function Create() {
                 }
               />
             </Box>
+            {session.user.role === "admin" && (
+              <Box py={1}>
+                <Heading size="xs" p={2}>
+                  Owner
+                </Heading>
+                <Input
+                  placeholder="username"
+                  value={card.owner ?? ""}
+                  onChange={(e) =>
+                    setCard({
+                      ...card,
+                      owner: e.target.value,
+                    })
+                  }
+                />
+              </Box>
+            )}
           </FormControl>
         </Flex>
       </HStack>
