@@ -96,7 +96,7 @@ export default function Characters() {
 
   return (
     <Center width="100%">
-      <Box width={["100%", "90%", "80%", "70%", "60%"]}>
+      <Box width={["100%", "100%", "100%", "80%", "60%"]}>
         {session.user.role === "admin" && (
           <>
             <Tabs>
