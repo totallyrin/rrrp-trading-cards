@@ -2,6 +2,7 @@
 
 import CharacterCard from "@/components/CharacterCard";
 import {
+  Badge,
   Box,
   Button,
   Center,
@@ -45,6 +46,8 @@ export default function Create() {
   });
   const toast = useToast();
 
+  console.log(session);
+
   useEffect(() => {
     if (session?.user.role !== "admin" && session?.user.name)
       fetchUserCards(session.user.name)
@@ -70,6 +73,16 @@ export default function Create() {
     return (
       <Center height="100%">
         <Spinner size="xl" thickness="3px" />
+      </Center>
+    );
+
+  if (!session.user.allowlisted)
+    return (
+      <Center height="100%">
+        <Text>
+          You do not have permission to create characters. You need to have the{" "}
+          <Badge>Allowlisted</Badge> role.
+        </Text>
       </Center>
     );
 

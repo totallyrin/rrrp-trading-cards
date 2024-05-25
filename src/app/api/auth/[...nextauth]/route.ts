@@ -4,7 +4,14 @@ import { Pool } from "pg";
 import PostgresAdapter from "@auth/pg-adapter";
 import { Adapter } from "next-auth/adapters";
 import { sql } from "@vercel/postgres";
-import { getUserGuild } from "@/utils/api";
+import { DiscordProfile, DiscordUser } from "@/utils/types";
+import { CustomUser } from "../../../../../types";
+
+const guildId = "821379192092229672";
+const roles = {
+  allowlisted: "1124039992696655953",
+  super_admin: "1119433578095333376",
+};
 
 const pool = new Pool({
   host: process.env.POSTGRES_HOST,
@@ -33,32 +40,42 @@ const handler = NextAuth({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
       authorization: process.env.DISCORD_URL ?? "",
-      allowDangerousEmailAccountLinking: true,
+      userinfo: `https://discord.com/api/users/@me/guilds/${guildId}/member`,
       profile(profile) {
         return {
-          ...profile,
-          id: profile.id,
-          name: profile.username,
-          image: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
+          // ...profile,
+          id: profile.user.id,
+          name: profile.user.username,
+          image: `https://cdn.discordapp.com/avatars/${profile.user.id}/${profile.user.avatar}.png`,
           role: "user",
-          guild: {},
+          allowlisted: profile.roles.includes(roles.allowlisted),
         };
       },
     }),
   ],
   callbacks: {
+    async signIn({ profile }) {
+      if (!profile || !(profile as DiscordProfile)?.user) return false;
+      try {
+        const allowlisted = (profile as DiscordProfile).roles.includes(
+          roles.allowlisted,
+        );
+        const avatar = `https://cdn.discordapp.com/avatars/${((profile as DiscordProfile).user as DiscordUser).id}/${((profile as DiscordProfile).user as DiscordUser).avatar}.png`;
+        await sql`
+        INSERT INTO users (name, image, role, allowlisted)
+        VALUES (${((profile as DiscordProfile).user as DiscordUser).username}, ${avatar}, ${"user"}, ${allowlisted})
+        ON CONFLICT (name) DO UPDATE SET image = ${avatar}, allowlisted = ${allowlisted}
+        `;
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
     async session({ session }) {
-      const role =
-        await sql`SELECT role FROM users WHERE name = ${session.user.name}`;
-      session.user.role = role?.rows[0]?.role ?? "user";
-      const userId =
-        await sql`SELECT id FROM users WHERE name = ${session.user.name}`;
-      const token =
-        await sql`SELECT access_token, "providerAccountId" FROM accounts WHERE "userId" = ${userId.rows[0]?.id}`.then();
-      getUserGuild(token?.rows[0]?.access_token).then((guild) => {
-        session.user.guild = guild;
-        console.log(guild);
-      });
+      const user =
+        await sql`SELECT * FROM users WHERE name = ${session.user.name}`;
+      session.user = user.rows[0] as CustomUser;
       return session;
     },
   },
