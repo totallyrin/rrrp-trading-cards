@@ -33,7 +33,7 @@ export default function Home() {
   }, []);
 
   return (
-    <VStack height="100%" justifyContent="center">
+    <VStack>
       <Heading size="2xl">Card of the Day</Heading>
       {card ? (
         <SlideFade in={!!card}>
