@@ -15,3 +15,17 @@ export type Card = {
   special_interest: string | undefined;
   owner: string | undefined;
 };
+
+export type DiscordUser = {
+  id: string;
+  username: string;
+  avatar: string;
+};
+
+export type DiscordProfile = {
+  joined_at: string | undefined;
+  nick: string | undefined;
+  roles: string[];
+  user: DiscordUser;
+  bio: string | undefined;
+};

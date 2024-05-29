@@ -1,9 +1,16 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { Pool } from "pg";
-import PostgresAdapter from "@auth/pg-adapter";
-import { Adapter } from "next-auth/adapters";
 import { sql } from "@vercel/postgres";
+import { CustomUser } from "../../../../../types";
+import { Adapter } from "next-auth/adapters";
+import CustomPostgresAdapter from "@/app/lib/customAdapter";
+
+const guildId = "821379192092229672";
+const roles = {
+  allowlisted: "1124039992696655953",
+  super_admin: "1119433578095333376",
+};
 
 const pool = new Pool({
   host: process.env.POSTGRES_HOST,
@@ -18,47 +25,37 @@ const pool = new Pool({
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: PostgresAdapter(pool) as Adapter,
+  adapter: CustomPostgresAdapter(pool) as Adapter,
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // 24 hours
   },
+  // pages: {
+  //   signIn: "/auth/signin",
+  // },
   providers: [
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID ?? "",
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    //   allowDangerousEmailAccountLinking: true,
-    //   profile(profile) {
-    //     return {
-    //       id: profile.sub,
-    //       name: profile.name,
-    //       email: profile.email,
-    //       image: profile.picture,
-    //       role: "user",
-    //     };
-    //   },
-    // }),
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
-      allowDangerousEmailAccountLinking: true,
+      authorization: process.env.DISCORD_URL ?? "",
+      userinfo: `https://discord.com/api/users/@me/guilds/${guildId}/member`,
       profile(profile) {
         return {
-          id: profile.id,
-          name: profile.username,
-          email: profile.email,
-          image: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
+          id: profile.user.id,
+          name: profile.user.username,
+          image: `https://cdn.discordapp.com/avatars/${profile.user.id}/${profile.user.avatar}.png`,
           role: "user",
+          allowlisted: profile.roles.includes(roles.allowlisted),
         };
       },
     }),
   ],
   callbacks: {
     async session({ session }) {
-      const role =
-        await sql`SELECT role FROM users WHERE email = ${session.user.email}`;
-      session.user.role = role?.rows[0]?.role ?? "user";
+      const user =
+        await sql`SELECT * FROM users WHERE name = ${session.user.name}`;
+      session.user = user.rows[0] as CustomUser;
       return session;
     },
   },

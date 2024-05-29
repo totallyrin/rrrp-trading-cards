@@ -5,10 +5,10 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Center,
   Divider,
   Heading,
   HStack,
-  Spacer,
   SystemStyleObject,
   Tag,
   Text,
@@ -43,14 +43,14 @@ export default function CharacterCard({
         </HStack>
       </CardHeader>
 
-      {character.image ? (
-        <AspectRatio
-          borderWidth="3px"
-          mx={4}
-          borderRadius="md"
-          position="relative"
-          ratio={3 / 2}
-        >
+      <AspectRatio
+        borderWidth="3px"
+        mx={4}
+        borderRadius="md"
+        position="relative"
+        ratio={3 / 2}
+      >
+        {character.image ? (
           <Image
             src={character.image}
             alt={character.name}
@@ -62,10 +62,10 @@ export default function CharacterCard({
               objectFit: "cover",
             }}
           />
-        </AspectRatio>
-      ) : (
-        <Spacer />
-      )}
+        ) : (
+          <Center>{character.name}</Center>
+        )}
+      </AspectRatio>
 
       <CardBody>
         <HStack height="100%">

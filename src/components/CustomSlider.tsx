@@ -20,14 +20,16 @@ export default function CustomSlider({
   color,
 }: {
   card: Character;
-  cards: Character[];
-  setCards: React.Dispatch<React.SetStateAction<Character[]>>;
+  cards?: Character[];
+  setCards:
+    | React.Dispatch<React.SetStateAction<Character[]>>
+    | React.Dispatch<React.SetStateAction<Character>>;
   title: string;
   attribute: keyof Character;
   color: string;
 }) {
   return (
-    <Box py={2} width="95%">
+    <Box py={2} width={["96%", "97%", "98%"]}>
       <Heading size="xs" p={2} pb={0}>
         {title}
       </Heading>
@@ -38,13 +40,19 @@ export default function CustomSlider({
         min={1}
         max={10}
         onChange={(e) => {
-          const updatedCards = cards.map((c) => {
-            if (c.id === card.id) {
-              return { ...c, [attribute]: e };
-            }
-            return c;
-          });
-          setCards(updatedCards);
+          if (cards) {
+            const updatedCards = cards.map((c) => {
+              if (c.id === card.id) {
+                return { ...c, [attribute]: e };
+              }
+              return c;
+            });
+            // @ts-ignore
+            setCards(updatedCards);
+          } else {
+            // @ts-ignore
+            setCards({ ...card, [attribute]: e });
+          }
         }}
       >
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
