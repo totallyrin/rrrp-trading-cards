@@ -15,7 +15,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <VStack height="100vh">
           <Navbar />
           {/*<Spacer />*/}
-          <Box width="100%" overflowY="auto" height="100%" px={5}>
+          <Box
+            sx={{
+              px: 5,
+              width: "100%",
+              height: "100%",
+              overflowY: "auto",
+            }}
+          >
             {children}
           </Box>
           {/*<Spacer />*/}
