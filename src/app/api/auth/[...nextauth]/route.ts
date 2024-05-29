@@ -1,11 +1,10 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { Pool } from "pg";
-import PostgresAdapter from "@auth/pg-adapter";
-import { Adapter } from "next-auth/adapters";
 import { sql } from "@vercel/postgres";
-import { DiscordProfile, DiscordUser } from "@/utils/types";
 import { CustomUser } from "../../../../../types";
+import { Adapter } from "next-auth/adapters";
+import CustomPostgresAdapter from "@/app/lib/customAdapter";
 
 const guildId = "821379192092229672";
 const roles = {
@@ -26,7 +25,7 @@ const pool = new Pool({
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
-  adapter: PostgresAdapter(pool) as Adapter,
+  adapter: CustomPostgresAdapter(pool) as Adapter,
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -43,7 +42,6 @@ const handler = NextAuth({
       userinfo: `https://discord.com/api/users/@me/guilds/${guildId}/member`,
       profile(profile) {
         return {
-          // ...profile,
           id: profile.user.id,
           name: profile.user.username,
           image: `https://cdn.discordapp.com/avatars/${profile.user.id}/${profile.user.avatar}.png`,
@@ -54,25 +52,8 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ profile }) {
-      if (!profile || !(profile as DiscordProfile)?.user) return false;
-      try {
-        const allowlisted = (profile as DiscordProfile).roles.includes(
-          roles.allowlisted,
-        );
-        const avatar = `https://cdn.discordapp.com/avatars/${((profile as DiscordProfile).user as DiscordUser).id}/${((profile as DiscordProfile).user as DiscordUser).avatar}.png`;
-        await sql`
-        INSERT INTO users (name, image, role, allowlisted)
-        VALUES (${((profile as DiscordProfile).user as DiscordUser).username}, ${avatar}, ${"user"}, ${allowlisted})
-        ON CONFLICT (name) DO UPDATE SET image = ${avatar}, allowlisted = ${allowlisted}
-        `;
-        return true;
-      } catch (error) {
-        console.error(error);
-        return false;
-      }
-    },
     async session({ session }) {
+      console.log(session);
       const user =
         await sql`SELECT * FROM users WHERE name = ${session.user.name}`;
       session.user = user.rows[0] as CustomUser;
