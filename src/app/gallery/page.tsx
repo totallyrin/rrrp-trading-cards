@@ -57,7 +57,7 @@ export default function Gallery() {
           />
         </InputGroup>
       </Box>
-      <Box height="92%" overflowY="scroll">
+      <Box height="92%" overflowY="auto">
         <SlideFade in={cards.length > 0}>
           <SimpleGrid minChildWidth={300} spacing={2}>
             {cards

@@ -94,7 +94,7 @@ export default function Create() {
     );
 
   return (
-    <VStack justifyContent="center" px={[0, 0, 0, 125, 250, 500, 1000]}>
+    <VStack overflowY="auto" height="100%">
       <HStack width="100%" flexWrap="wrap">
         <VStack flexGrow={1}>
           <CharacterCard

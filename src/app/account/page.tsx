@@ -24,7 +24,6 @@ import NextLink from "next/link";
 
 export default function Account() {
   const { data: session } = useSession();
-  const [showEmail, setShowEmail] = useState(false);
   const [cards, setCards] = useState<CardType[]>([]);
 
   useEffect(() => {
@@ -49,7 +48,7 @@ export default function Account() {
     );
 
   return (
-    <VStack height="100%" p={2}>
+    <VStack height="100%" p={2} overflowY="auto">
       <SkeletonCircle isLoaded={!!session} size="125">
         <Avatar
           name={session?.user.name ?? ""}

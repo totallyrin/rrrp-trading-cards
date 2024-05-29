@@ -95,40 +95,41 @@ export default function Characters() {
     );
 
   return (
-    <Center width="100%">
-      <Box width={["100%", "100%", "100%", "80%", "60%"]} height="100%">
+    <Box width="100%" height="100%">
+      <Box>
+        <InputGroup mb={1}>
+          <InputLeftElement pointerEvents="none">
+            <Search2Icon color="gray.300" />
+          </InputLeftElement>
+          <Input
+            type="text"
+            placeholder="Search by name"
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+          />
+        </InputGroup>
         {session.user.role === "admin" && (
-          <>
-            <InputGroup mb={1}>
-              <InputLeftElement pointerEvents="none">
-                <Search2Icon color="gray.300" />
-              </InputLeftElement>
-              <Input
-                type="text"
-                placeholder="Search by name"
-                onChange={(e) => {
-                  setSearchText(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <Tabs>
-              <TabList mb={4}>
-                <Tab
-                  onClick={() =>
-                    setCards(
-                      cards.filter((card) => card.owner === session.user.name),
-                    )
-                  }
-                >
-                  My characters
-                </Tab>
-                <Tab onClick={() => setCards(allCards)}>All characters</Tab>
-              </TabList>
-            </Tabs>
-          </>
+          <Tabs>
+            <TabList mb={4}>
+              <Tab
+                onClick={() =>
+                  setCards(
+                    cards.filter((card) => card.owner === session.user.name),
+                  )
+                }
+              >
+                My characters
+              </Tab>
+              <Tab onClick={() => setCards(allCards)}>All characters</Tab>
+            </TabList>
+          </Tabs>
         )}
+      </Box>
+
+      <Box height="90%" overflowY="auto">
         <SlideFade in={session && cards.length > 0}>
-          <VStack width="100%" overflowY="auto">
+          <VStack width="100%" height="100%" overflowY="scroll">
             {cards
               .filter((card) =>
                 card.name.toLowerCase().includes(searchText.toLowerCase()),
@@ -510,6 +511,6 @@ export default function Characters() {
           </AlertDialog>
         </SlideFade>
       </Box>
-    </Center>
+    </Box>
   );
 }

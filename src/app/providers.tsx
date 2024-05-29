@@ -20,7 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               px: 5,
               width: "100%",
               height: "100%",
-              overflowY: "auto",
+              overflowY: "hidden",
             }}
           >
             {children}
