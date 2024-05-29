@@ -53,7 +53,6 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      console.log(session);
       const user =
         await sql`SELECT * FROM users WHERE name = ${session.user.name}`;
       session.user = user.rows[0] as CustomUser;
