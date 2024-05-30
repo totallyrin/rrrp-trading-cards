@@ -12,6 +12,7 @@ import {
   HStack,
   Input,
   Spinner,
+  Tag,
   Text,
   Textarea,
   useToast,
@@ -22,7 +23,8 @@ import { addCard, fetchUserCards } from "@/app/lib/data";
 import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Card as CardType } from "@/utils/types";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { DiscordIcon } from "@/components/icons/DiscordIcon";
 
 export default function Create() {
   const { data: session } = useSession();
@@ -61,11 +63,21 @@ export default function Create() {
 
   if (session === null)
     return (
-      <VStack height="100%" pt={10}>
-        <Text textAlign="center" mb={3}>
-          You must be signed in to manage your characters.
-        </Text>
-        <Button onClick={() => signIn()}>Click here to sign in!</Button>
+      <VStack height="100%" spacing={5}>
+        <Tag
+          textAlign="center"
+          // colorScheme="red"
+        >
+          You must be signed in to create a character.
+        </Tag>
+        <Button
+          variant="discord"
+          onClick={() => signIn("discord")}
+          leftIcon={<DiscordIcon />}
+          rightIcon={<ChevronRightIcon />}
+        >
+          Sign in with Discord
+        </Button>
       </VStack>
     );
 

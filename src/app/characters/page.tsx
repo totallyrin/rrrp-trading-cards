@@ -33,7 +33,7 @@ import {
   Tab,
   TabList,
   Tabs,
-  Text,
+  Tag,
   Textarea,
   useDisclosure,
   useToast,
@@ -41,7 +41,8 @@ import {
 } from "@chakra-ui/react";
 import CharacterCard from "@/components/CharacterCard";
 import CustomSlider from "@/components/CustomSlider";
-import { Search2Icon } from "@chakra-ui/icons";
+import { ChevronRightIcon, Search2Icon } from "@chakra-ui/icons";
+import { DiscordIcon } from "@/components/icons/DiscordIcon";
 
 export default function Characters() {
   const { data: session } = useSession();
@@ -79,11 +80,21 @@ export default function Characters() {
 
   if (session === null)
     return (
-      <VStack height="100%" pt={10}>
-        <Text textAlign="center" mb={3}>
+      <VStack height="100%" spacing={5}>
+        <Tag
+          textAlign="center"
+          // colorScheme="red"
+        >
           You must be signed in to manage your characters.
-        </Text>
-        <Button onClick={() => signIn()}>Click here to sign in!</Button>
+        </Tag>
+        <Button
+          variant="discord"
+          onClick={() => signIn("discord")}
+          leftIcon={<DiscordIcon />}
+          rightIcon={<ChevronRightIcon />}
+        >
+          Sign in with Discord
+        </Button>
       </VStack>
     );
 
