@@ -106,7 +106,13 @@ export default function Characters() {
     );
 
   return (
-    <Box width="100%" height="100%">
+    <Flex
+      width="100%"
+      height="100%"
+      overflowX="hidden"
+      overflowY="hidden"
+      flexDirection="column"
+    >
       <Box>
         <InputGroup mb={1}>
           <InputLeftElement pointerEvents="none">
@@ -138,7 +144,7 @@ export default function Characters() {
         )}
       </Box>
 
-      <Box height="90%" overflowY="auto">
+      <Box flexGrow={1} overflowY="scroll" overflowX="hidden">
         <SlideFade in={session && cards.length > 0}>
           <VStack width="100%" height="100%" overflowY="scroll">
             {cards
@@ -522,6 +528,6 @@ export default function Characters() {
           </AlertDialog>
         </SlideFade>
       </Box>
-    </Box>
+    </Flex>
   );
 }

@@ -7,6 +7,7 @@ import CharacterCard from "@/components/CharacterCard";
 import {
   Box,
   Center,
+  Flex,
   Input,
   InputGroup,
   InputLeftElement,
@@ -38,7 +39,7 @@ export default function Gallery() {
     );
 
   return (
-    <Box width="100%" height="100%">
+    <Flex width="100%" height="100%" flexDirection="column">
       <Box
         sx={{
           mb: 5,
@@ -57,7 +58,7 @@ export default function Gallery() {
           />
         </InputGroup>
       </Box>
-      <Box height="92%" overflowY="auto">
+      <Box overflowY="auto" flexGrow={1}>
         <SlideFade in={cards.length > 0}>
           <SimpleGrid minChildWidth={300} spacing={2}>
             {cards
@@ -80,6 +81,6 @@ export default function Gallery() {
           </SimpleGrid>
         </SlideFade>
       </Box>
-    </Box>
+    </Flex>
   );
 }
