@@ -13,7 +13,6 @@ import {
   Input,
   Spinner,
   Tag,
-  Text,
   Textarea,
   useToast,
   VStack,
@@ -47,8 +46,6 @@ export default function Create() {
     owner: session?.user.name ?? "",
   });
   const toast = useToast();
-
-  console.log(session);
 
   useEffect(() => {
     if (session?.user.role !== "admin" && session?.user.name)
@@ -91,17 +88,17 @@ export default function Create() {
   if (!session.user.allowlisted)
     return (
       <Center height="100%">
-        <Text>
+        <Tag>
           You do not have permission to create characters. You need to have the{" "}
           <Badge>Allowlisted</Badge> role.
-        </Text>
+        </Tag>
       </Center>
     );
 
   if (cards.length >= 3)
     return (
       <Center height="100%">
-        <Text>You have reached the maximum number of characters (3).</Text>
+        <Tag>You have reached the maximum number of characters (3).</Tag>
       </Center>
     );
 
