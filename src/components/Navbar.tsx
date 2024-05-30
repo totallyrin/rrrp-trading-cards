@@ -37,6 +37,7 @@ import NextLink from "next/link";
 import Footer from "@/components/Footer";
 import { signIn, signOut, useSession } from "next-auth/react";
 import DividerRainbow from "@/components/DividerRainbow";
+import { DiscordIcon } from "@/components/icons/DiscordIcon";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -79,46 +80,58 @@ export default function Navbar() {
                   aria-label="Profile"
                   icon={
                     session ? (
-                      <Avatar
-                        size="sm"
-                        name={session?.user?.name ?? ""}
-                        src={session?.user?.image ?? ""}
-                      />
+                      <>
+                        <Avatar
+                          size="sm"
+                          name={session?.user?.name ?? ""}
+                          src={session?.user?.image ?? ""}
+                        />
+                        <MenuList px={2}>
+                          <Heading size="md" textAlign="center">
+                            {session?.user?.name}
+                          </Heading>
+                          <MenuDivider />
+                          <LinkBox>
+                            <LinkOverlay as={NextLink} href="/account">
+                              <MenuItem
+                                as={Button}
+                                textAlign="left"
+                                rightIcon={<ChevronRightIcon />}
+                              >
+                                Account
+                              </MenuItem>
+                            </LinkOverlay>
+                          </LinkBox>
+                          <MenuItem
+                            as={Button}
+                            textAlign="left"
+                            rightIcon={<ChevronRightIcon />}
+                            onClick={() => signOut()}
+                          >
+                            Sign out
+                          </MenuItem>
+                        </MenuList>
+                      </>
                     ) : (
                       <SkeletonCircle size="8" />
                     )
                   }
                 />
-                {session && (
-                  <MenuList px={2}>
-                    <Heading size="md" textAlign="center">
-                      {session?.user?.name}
-                    </Heading>
-                    <MenuDivider />
-                    <LinkBox>
-                      <LinkOverlay as={NextLink} href="/account">
-                        <MenuItem
-                          as={Button}
-                          textAlign="left"
-                          rightIcon={<ChevronRightIcon />}
-                        >
-                          Account
-                        </MenuItem>
-                      </LinkOverlay>
-                    </LinkBox>
-                    <MenuItem
-                      as={Button}
-                      textAlign="left"
-                      rightIcon={<ChevronRightIcon />}
-                      onClick={() => signOut()}
-                    >
-                      Sign out
-                    </MenuItem>
-                  </MenuList>
-                )}
               </Menu>
+            ) : mobile ? (
+              <IconButton
+                aria-label={"Sign in with Discord"}
+                variant="discord"
+                icon={<DiscordIcon />}
+              />
             ) : (
-              <Button rightIcon={<ChevronRightIcon />} onClick={() => signIn()}>
+              <Button
+                variant="discord"
+                onClick={() => signIn("discord")}
+                leftIcon={<DiscordIcon />}
+                rightIcon={<ChevronRightIcon />}
+                py={3}
+              >
                 Sign in
               </Button>
             )}
