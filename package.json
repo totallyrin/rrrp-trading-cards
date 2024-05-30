@@ -16,6 +16,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@vercel/postgres": "^0.8.0",
+    "chakra-react-select": "^4.7.6",
     "framer-motion": "^11.2.4",
     "next": "14.2.3",
     "next-auth": "^4.24.7",

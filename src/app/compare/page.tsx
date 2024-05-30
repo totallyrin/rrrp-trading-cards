@@ -4,7 +4,6 @@ import {
   AbsoluteCenter,
   Box,
   Button,
-  Center,
   Divider,
   Flex,
   Input,
@@ -24,6 +23,7 @@ import { Card as CardType } from "@/utils/types";
 import { fetchAllCards } from "@/app/lib/data";
 import { ArrowBackIcon, CheckIcon, Search2Icon } from "@chakra-ui/icons";
 import CharacterCard from "@/components/CharacterCard";
+import { Select } from "chakra-react-select";
 
 export default function Compare() {
   const [mobile] = useMediaQuery("(orientation: portrait)", {
@@ -33,6 +33,7 @@ export default function Compare() {
   const [cards, setCards] = useState<CardType[]>([]);
   const [selectedCards, setSelectedCards] = useState<CardType[]>([]);
   const [searchText, setSearchText] = useState("");
+  const [menuSelected, setMenuSelected] = useState(false);
 
   useEffect(() => {
     fetchAllCards()
@@ -46,14 +47,26 @@ export default function Compare() {
 
   if (cards.length === 0)
     return (
-      <Center height="100%">
+      <AbsoluteCenter>
         <Spinner size="xl" thickness="3px" />
-      </Center>
+      </AbsoluteCenter>
+    );
+
+  if (mobile)
+    return (
+      <VStack width="100%">
+        <Select
+          isMulti
+          options={cards.map((c) => c.name)}
+          placeholder="Search by name"
+          closeMenuOnSelect={false}
+        />
+      </VStack>
     );
 
   return (
     <Flex height="100%">
-      <VStack>
+      <VStack maxWidth="30%">
         <InputGroup>
           <InputLeftElement pointerEvents="none">
             <Search2Icon color="gray.300" />
@@ -66,7 +79,7 @@ export default function Compare() {
             }}
           />
         </InputGroup>
-        <Box height="92%" overflowY="auto" width="100%">
+        <Box overflowY="auto">
           <VStack width="100%" pr={3}>
             {cards
               .filter((c) => c.name.toLowerCase().includes(searchText))
@@ -116,17 +129,17 @@ export default function Compare() {
         </Box>
       </VStack>
       <Divider height="100%" orientation="vertical" mx={5} />
-      <Box height="92%" overflowY="auto" flexGrow={1}>
-        <SlideFade in={selectedCards.length === 0}>
-          {selectedCards.length === 0 && (
-            <AbsoluteCenter axis="horizontal">
+      <Box overflowY="auto" flexGrow={2}>
+        {selectedCards.length === 0 && (
+          <AbsoluteCenter axis="horizontal">
+            <SlideFade in={selectedCards.length === 0}>
               <Tag mt={2}>
                 <TagLeftIcon as={ArrowBackIcon} />
                 <TagLabel>Select some characters to compare!</TagLabel>
               </Tag>
-            </AbsoluteCenter>
-          )}
-        </SlideFade>
+            </SlideFade>
+          </AbsoluteCenter>
+        )}
         <SlideFade in={selectedCards.length > 0}>
           <SimpleGrid minChildWidth={300} spacing={2}>
             {selectedCards.map((card, i) => (
