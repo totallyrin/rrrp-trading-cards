@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AbsoluteCenter,
   Box,
   Button,
   Center,
@@ -25,7 +26,10 @@ import { ArrowBackIcon, CheckIcon, Search2Icon } from "@chakra-ui/icons";
 import CharacterCard from "@/components/CharacterCard";
 
 export default function Compare() {
-  const [mobile] = useMediaQuery("(orientation: portrait)");
+  const [mobile] = useMediaQuery("(orientation: portrait)", {
+    ssr: true,
+    fallback: true,
+  });
   const [cards, setCards] = useState<CardType[]>([]);
   const [selectedCards, setSelectedCards] = useState<CardType[]>([]);
   const [searchText, setSearchText] = useState("");
@@ -115,10 +119,12 @@ export default function Compare() {
       <Box height="92%" overflowY="auto" flexGrow={1}>
         <SlideFade in={selectedCards.length === 0}>
           {selectedCards.length === 0 && (
-            <Tag mt={2}>
-              <TagLeftIcon as={ArrowBackIcon} />
-              <TagLabel>Select some characters to compare!</TagLabel>
-            </Tag>
+            <AbsoluteCenter axis="horizontal">
+              <Tag mt={2}>
+                <TagLeftIcon as={ArrowBackIcon} />
+                <TagLabel>Select some characters to compare!</TagLabel>
+              </Tag>
+            </AbsoluteCenter>
           )}
         </SlideFade>
         <SlideFade in={selectedCards.length > 0}>
