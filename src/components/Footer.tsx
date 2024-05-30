@@ -17,7 +17,10 @@ import DividerRainbow from "@/components/DividerRainbow";
 
 export default function Footer({ condensed = false }) {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [mobile] = useMediaQuery("(orientation: portrait)");
+  const [mobile] = useMediaQuery("(orientation: portrait)", {
+    ssr: true,
+    fallback: true,
+  });
 
   return (
     <Flex direction="column" width="100%" mt={3}>
