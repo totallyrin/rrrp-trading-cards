@@ -31,6 +31,10 @@ const handler = NextAuth({
     maxAge: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // 24 hours
   },
+  pages: {
+    error: "/",
+    signIn: "/",
+  },
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
