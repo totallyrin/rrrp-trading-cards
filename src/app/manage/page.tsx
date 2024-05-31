@@ -22,7 +22,6 @@ import {
   Center,
   Divider,
   Flex,
-  FormControl,
   Heading,
   HStack,
   Input,
@@ -55,7 +54,7 @@ export default function Characters() {
   const toast = useToast();
 
   useEffect(() => {
-    if (session?.user.role === "admin")
+    if (session?.user.admin)
       fetchAllCards()
         .then((cards) => {
           setAllCards(cards as CardType[]);
@@ -76,7 +75,7 @@ export default function Characters() {
         .catch((error) => {
           console.error(error);
         });
-  }, [session?.user.role, session?.user.name]);
+  }, [session?.user.admin, session?.user.name]);
 
   if (session === null)
     return (
@@ -124,11 +123,12 @@ export default function Characters() {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            // isDisabled
           />
         </InputGroup>
-        {session.user.role === "admin" && (
+        {session.user.admin && (
           <Tabs>
-            <TabList mb={4}>
+            <TabList mb={1}>
               <Tab
                 onClick={() =>
                   setCards(
@@ -144,7 +144,7 @@ export default function Characters() {
         )}
       </Box>
 
-      <Box flexGrow={1} overflowY="scroll" overflowX="hidden">
+      <Box flexGrow={1} overflowY="scroll" overflowX="hidden" mt={3}>
         <SlideFade in={session && cards.length > 0}>
           <VStack width="100%" height="100%" overflowY="scroll">
             {cards
@@ -152,14 +152,13 @@ export default function Characters() {
                 card.name.toLowerCase().includes(searchText.toLowerCase()),
               )
               .map((card, i) => (
-                <>
+                <Box key={card.id}>
                   {i > 0 && <Divider my={2} />}
                   <HStack
                     width="100%"
                     alignItems="center"
                     justifyContent="space-around"
                     flexWrap="wrap"
-                    key={i}
                   >
                     <CharacterCard
                       character={card}
@@ -168,76 +167,172 @@ export default function Characters() {
                       }}
                     />
                     <Flex flexDirection="column" pl={2} flexGrow={3}>
-                      <FormControl>
-                        <Box pb={1}>
-                          <Heading size="xs" p={2} pt={0}>
-                            Character Name
-                          </Heading>
-                          <Input
-                            placeholder="Name"
-                            value={card.name ?? ""}
-                            onChange={(e) => {
-                              const updatedCards = cards.map((c) => {
-                                if (c.id === card.id) {
-                                  return { ...c, name: e.target.value };
-                                }
-                                return c;
-                              });
-                              setCards(updatedCards);
-                            }}
-                            isRequired
-                          />
-                        </Box>
+                      <Box pb={1}>
+                        <Heading size="xs" p={2} pt={0}>
+                          Character Name
+                        </Heading>
+                        <Input
+                          placeholder="Name"
+                          value={card.name ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return { ...c, name: e.target.value };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                          isRequired
+                        />
+                      </Box>
+                      <Box py={1}>
+                        <Heading size="xs" p={2}>
+                          Pronouns
+                        </Heading>
+                        <Input
+                          placeholder="they/them"
+                          value={card.pronouns ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return { ...c, pronouns: e.target.value };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                        />
+                      </Box>
+                      <Box py={1}>
+                        <Heading size="xs" p={2}>
+                          Image Link
+                        </Heading>
+                        <Input
+                          placeholder="https://example.com/image.jpg"
+                          value={card.image ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return { ...c, image: e.target.value };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                          isDisabled={!session.user.admin}
+                        />
+                      </Box>
+                      <Box py={1}>
+                        <Heading size="xs" p={2}>
+                          Occupation
+                        </Heading>
+                        <Input
+                          placeholder="Unemployed"
+                          value={card.occupation ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return {
+                                  ...c,
+                                  occupation:
+                                    e.target.value.length > 0
+                                      ? e.target.value
+                                      : undefined,
+                                };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                        />
+                      </Box>
+                      <Box py={1}>
+                        <Heading size="xs" p={2}>
+                          Residence
+                        </Heading>
+                        <Input
+                          placeholder="Valentine"
+                          value={card.residence ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return {
+                                  ...c,
+                                  residence:
+                                    e.target.value.length > 0
+                                      ? e.target.value
+                                      : undefined,
+                                };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                        />
+                      </Box>
+                      <Box py={1}>
+                        <Heading size="xs" p={2}>
+                          Special Interests
+                        </Heading>
+                        <Input
+                          placeholder="Hobbies/interests"
+                          value={card.special_interest ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return {
+                                  ...c,
+                                  special_interest:
+                                    e.target.value.length > 0
+                                      ? e.target.value
+                                      : undefined,
+                                };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                        />
+                      </Box>
+                      <Box py={1}>
+                        <Heading size="xs" p={2}>
+                          Character Quote
+                        </Heading>
+                        <Textarea
+                          placeholder="Be gay, do crime!"
+                          value={card.quote ?? ""}
+                          onChange={(e) => {
+                            const updatedCards = cards.map((c) => {
+                              if (c.id === card.id) {
+                                return {
+                                  ...c,
+                                  quote:
+                                    e.target.value.length > 0
+                                      ? e.target.value
+                                      : undefined,
+                                };
+                              }
+                              return c;
+                            });
+                            setCards(updatedCards);
+                          }}
+                        />
+                      </Box>
+                      {session.user.admin && (
                         <Box py={1}>
                           <Heading size="xs" p={2}>
-                            Pronouns
+                            Owner
                           </Heading>
                           <Input
-                            placeholder="they/them"
-                            value={card.pronouns ?? ""}
-                            onChange={(e) => {
-                              const updatedCards = cards.map((c) => {
-                                if (c.id === card.id) {
-                                  return { ...c, pronouns: e.target.value };
-                                }
-                                return c;
-                              });
-                              setCards(updatedCards);
-                            }}
-                          />
-                        </Box>
-                        <Box py={1}>
-                          <Heading size="xs" p={2}>
-                            Image Link
-                          </Heading>
-                          <Input
-                            placeholder="https://example.com/image.jpg"
-                            value={card.image ?? ""}
-                            onChange={(e) => {
-                              const updatedCards = cards.map((c) => {
-                                if (c.id === card.id) {
-                                  return { ...c, image: e.target.value };
-                                }
-                                return c;
-                              });
-                              setCards(updatedCards);
-                            }}
-                            isDisabled={session.user.role !== "admin"}
-                          />
-                        </Box>
-                        <Box py={1}>
-                          <Heading size="xs" p={2}>
-                            Occupation
-                          </Heading>
-                          <Input
-                            placeholder="Unemployed"
-                            value={card.occupation ?? ""}
+                            placeholder="username"
+                            value={card.owner ?? ""}
                             onChange={(e) => {
                               const updatedCards = cards.map((c) => {
                                 if (c.id === card.id) {
                                   return {
                                     ...c,
-                                    occupation:
+                                    owner:
                                       e.target.value.length > 0
                                         ? e.target.value
                                         : undefined,
@@ -249,105 +344,7 @@ export default function Characters() {
                             }}
                           />
                         </Box>
-                        <Box py={1}>
-                          <Heading size="xs" p={2}>
-                            Residence
-                          </Heading>
-                          <Input
-                            placeholder="Valentine"
-                            value={card.residence ?? ""}
-                            onChange={(e) => {
-                              const updatedCards = cards.map((c) => {
-                                if (c.id === card.id) {
-                                  return {
-                                    ...c,
-                                    residence:
-                                      e.target.value.length > 0
-                                        ? e.target.value
-                                        : undefined,
-                                  };
-                                }
-                                return c;
-                              });
-                              setCards(updatedCards);
-                            }}
-                          />
-                        </Box>
-                        <Box py={1}>
-                          <Heading size="xs" p={2}>
-                            Special Interests
-                          </Heading>
-                          <Input
-                            placeholder="Hobbies/interests"
-                            value={card.special_interest ?? ""}
-                            onChange={(e) => {
-                              const updatedCards = cards.map((c) => {
-                                if (c.id === card.id) {
-                                  return {
-                                    ...c,
-                                    special_interest:
-                                      e.target.value.length > 0
-                                        ? e.target.value
-                                        : undefined,
-                                  };
-                                }
-                                return c;
-                              });
-                              setCards(updatedCards);
-                            }}
-                          />
-                        </Box>
-                        <Box py={1}>
-                          <Heading size="xs" p={2}>
-                            Character Quote
-                          </Heading>
-                          <Textarea
-                            placeholder="Be gay, do crime!"
-                            value={card.quote ?? ""}
-                            onChange={(e) => {
-                              const updatedCards = cards.map((c) => {
-                                if (c.id === card.id) {
-                                  return {
-                                    ...c,
-                                    quote:
-                                      e.target.value.length > 0
-                                        ? e.target.value
-                                        : undefined,
-                                  };
-                                }
-                                return c;
-                              });
-                              setCards(updatedCards);
-                            }}
-                          />
-                        </Box>
-                        {session.user.role === "admin" && (
-                          <Box py={1}>
-                            <Heading size="xs" p={2}>
-                              Owner
-                            </Heading>
-                            <Input
-                              placeholder="username"
-                              value={card.owner ?? ""}
-                              onChange={(e) => {
-                                const updatedCards = cards.map((c) => {
-                                  if (c.id === card.id) {
-                                    return {
-                                      ...c,
-                                      owner:
-                                        e.target.value.length > 0
-                                          ? e.target.value
-                                          : undefined,
-                                    };
-                                  }
-                                  return c;
-                                });
-                                setCards(updatedCards);
-                              }}
-                            />
-                          </Box>
-                        )}
-                      </FormControl>
+                      )}
                     </Flex>
                     <VStack height="100%" flexGrow={2} minWidth={300}>
                       <Flex
@@ -356,56 +353,54 @@ export default function Characters() {
                         width="100%"
                         pr={3}
                       >
-                        <FormControl>
-                          <CustomSlider
-                            card={card}
-                            cards={cards}
-                            setCards={setCards}
-                            title="Strength"
-                            attribute="strength"
-                            color="#FF595E"
-                          />
-                          <CustomSlider
-                            card={card}
-                            cards={cards}
-                            setCards={setCards}
-                            title="Comedic Timing"
-                            attribute="comedic_timing"
-                            color="#FF924C"
-                          />
-                          <CustomSlider
-                            card={card}
-                            cards={cards}
-                            setCards={setCards}
-                            title="Dirty Minded"
-                            attribute="dirty_minded"
-                            color="#FFCA3A"
-                          />
-                          <CustomSlider
-                            card={card}
-                            cards={cards}
-                            setCards={setCards}
-                            title="Accident Prone"
-                            attribute="accident_prone"
-                            color="#8AC926"
-                          />
-                          <CustomSlider
-                            card={card}
-                            cards={cards}
-                            setCards={setCards}
-                            title="Rizz"
-                            attribute="rizz"
-                            color="#1982C4"
-                          />
-                          <CustomSlider
-                            card={card}
-                            cards={cards}
-                            setCards={setCards}
-                            title="Serving"
-                            attribute="serving_cunt"
-                            color="#6A4C93"
-                          />
-                        </FormControl>
+                        <CustomSlider
+                          card={card}
+                          cards={cards}
+                          setCards={setCards}
+                          title="Strength"
+                          attribute="strength"
+                          color="#FF595E"
+                        />
+                        <CustomSlider
+                          card={card}
+                          cards={cards}
+                          setCards={setCards}
+                          title="Comedic Timing"
+                          attribute="comedic_timing"
+                          color="#FF924C"
+                        />
+                        <CustomSlider
+                          card={card}
+                          cards={cards}
+                          setCards={setCards}
+                          title="Dirty Minded"
+                          attribute="dirty_minded"
+                          color="#FFCA3A"
+                        />
+                        <CustomSlider
+                          card={card}
+                          cards={cards}
+                          setCards={setCards}
+                          title="Accident Prone"
+                          attribute="accident_prone"
+                          color="#8AC926"
+                        />
+                        <CustomSlider
+                          card={card}
+                          cards={cards}
+                          setCards={setCards}
+                          title="Rizz"
+                          attribute="rizz"
+                          color="#1982C4"
+                        />
+                        <CustomSlider
+                          card={card}
+                          cards={cards}
+                          setCards={setCards}
+                          title="Serving"
+                          attribute="serving_cunt"
+                          color="#6A4C93"
+                        />
                       </Flex>
                       <HStack pt={5}>
                         <Button
@@ -453,7 +448,7 @@ export default function Characters() {
                       </HStack>
                     </VStack>
                   </HStack>
-                </>
+                </Box>
               ))}
           </VStack>
           <AlertDialog

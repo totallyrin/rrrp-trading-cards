@@ -57,7 +57,7 @@ export default function CustomSlider({
       >
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
           <SliderMark
-            key={value}
+            key={`slider-mark-${value}`}
             value={value}
             sx={{
               m: value === 10 ? 0.5 : 1,
