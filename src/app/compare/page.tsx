@@ -72,7 +72,7 @@ export default function Compare() {
           // matchWidth
           // gutter={20}
         >
-          <HStack width="100%">
+          <HStack width="100%" spacing={5}>
             <MenuButton
               as={Button}
               leftIcon={<ChevronDownIcon />}
@@ -107,11 +107,11 @@ export default function Compare() {
             </MenuOptionGroup>
           </MenuList>
         </Menu>
-        <Box overflowY="auto" mt={3} flexGrow={1} width="100%">
+        <Box overflowY="auto" flexGrow={1} width="100%" mt={3}>
           {selectedCards.length === 0 && (
             <Center width="100%">
               <SlideFade in={selectedCards.length === 0}>
-                <Tag mt={2}>
+                <Tag>
                   <TagLeftIcon as={ArrowUpIcon} />
                   <TagLabel>Select some characters to compare!</TagLabel>
                 </Tag>
@@ -121,17 +121,7 @@ export default function Compare() {
           <SlideFade in={selectedCards.length > 0}>
             <SimpleGrid minChildWidth={300} spacing={2}>
               {selectedCards.map((card, i) => (
-                <CharacterCard
-                  character={card}
-                  key={i}
-                  sx={{
-                    transform: "scale(0.96)",
-                    transition: "all 0.2s ease-in-out",
-                    _hover: {
-                      transform: "scale(1)",
-                    },
-                  }}
-                />
+                <CharacterCard character={card} key={i} />
               ))}
             </SimpleGrid>
           </SlideFade>
