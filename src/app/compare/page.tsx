@@ -4,26 +4,39 @@ import {
   AbsoluteCenter,
   Box,
   Button,
+  Center,
   Divider,
   Flex,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
   SimpleGrid,
   SlideFade,
   Spinner,
   Tag,
   TagLabel,
   TagLeftIcon,
+  useDisclosure,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Card as CardType } from "@/utils/types";
 import { fetchAllCards } from "@/app/lib/data";
-import { ArrowBackIcon, CheckIcon, Search2Icon } from "@chakra-ui/icons";
+import {
+  ArrowBackIcon,
+  ArrowUpIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  Search2Icon,
+} from "@chakra-ui/icons";
 import CharacterCard from "@/components/CharacterCard";
-import { Select } from "chakra-react-select";
 
 export default function Compare() {
   const [mobile] = useMediaQuery("(orientation: portrait)", {
@@ -33,7 +46,7 @@ export default function Compare() {
   const [cards, setCards] = useState<CardType[]>([]);
   const [selectedCards, setSelectedCards] = useState<CardType[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [menuSelected, setMenuSelected] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     fetchAllCards()
@@ -54,13 +67,75 @@ export default function Compare() {
 
   if (mobile)
     return (
-      <VStack width="100%">
-        <Select
-          isMulti
-          options={cards.map((c) => c.name)}
-          placeholder="Search by name"
-          closeMenuOnSelect={false}
-        />
+      <VStack width="100%" height="100%">
+        <Menu
+          isOpen={isOpen}
+          onClose={onClose}
+          closeOnSelect={false}
+          // matchWidth
+          // gutter={20}
+        >
+          <HStack width="100%" spacing={5}>
+            <MenuButton
+              as={Button}
+              leftIcon={<ChevronDownIcon />}
+              flexGrow={1}
+              textAlign="left"
+              textOverflow="ellipsis"
+              onClick={onOpen}
+            >
+              {selectedCards.length} character
+              {selectedCards.length !== 1 && "s"} selected
+            </MenuButton>
+            <Button
+              onClick={() => {
+                onOpen();
+                setSelectedCards([]);
+              }}
+              colorScheme="red"
+            >
+              Clear
+            </Button>
+          </HStack>
+          <MenuList overflowY="scroll" maxH={350} maxW={350}>
+            <MenuOptionGroup
+              type="checkbox"
+              onChange={(e) =>
+                setSelectedCards(cards.filter((c) => e.includes(c.name)))
+              }
+              value={selectedCards.map((c) => c.name)}
+            >
+              {cards.map((card) => (
+                <MenuItemOption
+                  key={card.name}
+                  type="checkbox"
+                  value={card.name}
+                >
+                  {card.name}
+                </MenuItemOption>
+              ))}
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
+        <Box overflowY="auto" flexGrow={1} width="100%" mt={3}>
+          {selectedCards.length === 0 && (
+            <Center width="100%">
+              <SlideFade in={selectedCards.length === 0}>
+                <Tag>
+                  <TagLeftIcon as={ArrowUpIcon} />
+                  <TagLabel>Select some characters to compare!</TagLabel>
+                </Tag>
+              </SlideFade>
+            </Center>
+          )}
+          <SlideFade in={selectedCards.length > 0}>
+            <SimpleGrid minChildWidth={300} spacing={5}>
+              {selectedCards.map((card, i) => (
+                <CharacterCard character={card} key={i} />
+              ))}
+            </SimpleGrid>
+          </SlideFade>
+        </Box>
       </VStack>
     );
 
@@ -79,8 +154,8 @@ export default function Compare() {
             }}
           />
         </InputGroup>
-        <Box overflowY="auto">
-          <VStack width="100%" pr={3}>
+        <Box overflowY="auto" width="100%">
+          <VStack width="100%">
             {cards
               .filter((c) => c.name.toLowerCase().includes(searchText))
               .map((card) => (
@@ -88,13 +163,13 @@ export default function Compare() {
                   key={card.name}
                   width="100%"
                   variant="ghost"
-                  justifyContent="space-between"
-                  pr={
+                  justifyContent="flex-start"
+                  pl={
                     selectedCards.find((c) => c.name === card.name)
                       ? "auto"
                       : 10
                   }
-                  rightIcon={
+                  leftIcon={
                     selectedCards.find((c) => c.name === card.name) ? (
                       <CheckIcon />
                     ) : undefined

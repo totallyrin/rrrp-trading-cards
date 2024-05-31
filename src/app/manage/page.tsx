@@ -161,17 +161,13 @@ export default function Characters() {
                     flexWrap="wrap"
                     key={i}
                   >
-                    <Box width="30%" minWidth={350}>
-                      <VStack flexGrow={1}>
-                        <CharacterCard
-                          character={card}
-                          sx={{
-                            width: "100%",
-                          }}
-                        />
-                      </VStack>
-                    </Box>
-                    <Flex flexDirection="column" pl={2} flexGrow={5}>
+                    <CharacterCard
+                      character={card}
+                      sx={{
+                        flexGrow: 1,
+                      }}
+                    />
+                    <Flex flexDirection="column" pl={2} flexGrow={3}>
                       <FormControl>
                         <Box pb={1}>
                           <Heading size="xs" p={2} pt={0}>
@@ -353,7 +349,7 @@ export default function Characters() {
                         )}
                       </FormControl>
                     </Flex>
-                    <VStack height="100%" flexGrow={1} minWidth={355}>
+                    <VStack height="100%" flexGrow={2} minWidth={300}>
                       <Flex
                         flexDirection="column"
                         height="100%"

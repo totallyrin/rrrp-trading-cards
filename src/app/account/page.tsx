@@ -2,6 +2,7 @@
 
 import {
   Avatar,
+  Badge,
   Button,
   Divider,
   Flex,
@@ -12,6 +13,7 @@ import {
   SlideFade,
   Tag,
   Text,
+  useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
@@ -23,6 +25,10 @@ import { EditIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 
 export default function Account() {
+  const [mobile] = useMediaQuery("(orientation: portrait)", {
+    ssr: true,
+    fallback: true,
+  });
   const { data: session } = useSession();
   const [cards, setCards] = useState<CardType[]>([]);
 
@@ -68,7 +74,10 @@ export default function Account() {
         />
       )}
       {session ? (
-        <Tag>{session?.user.role.toUpperCase()}</Tag>
+        <VStack>
+          <Tag>{session?.user.role.toUpperCase()}</Tag>
+          {session?.user.allowlisted && <Badge>Allowlisted</Badge>}
+        </VStack>
       ) : (
         <Skeleton width={75} height={6} />
       )}
@@ -83,19 +92,23 @@ export default function Account() {
               <CharacterCard
                 character={card}
                 key={i}
-                sx={{
-                  transform: "scale(0.96)",
-                  transition: "all 0.2s ease-in-out",
-                  _hover: {
-                    transform: "scale(1)",
-                  },
-                }}
+                sx={
+                  mobile
+                    ? {}
+                    : {
+                        transform: "scale(0.96)",
+                        transition: "all 0.2s ease-in-out",
+                        _hover: {
+                          transform: "scale(1)",
+                        },
+                      }
+                }
               />
             ))}
           </Flex>
           <Button
             as={NextLink}
-            href={"/characters"}
+            href={"/manage"}
             rightIcon={<EditIcon />}
             mt={1}
           >

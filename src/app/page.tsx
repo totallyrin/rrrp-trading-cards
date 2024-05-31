@@ -37,17 +37,7 @@ export default function Home() {
       <Heading size="2xl">Card of the Day</Heading>
       {card ? (
         <SlideFade in={!!card}>
-          <CharacterCard
-            character={card}
-            sx={{
-              my: 5,
-              transform: "scale(1)",
-              transition: "all 0.2s ease-in-out",
-              _hover: {
-                transform: "scale(1.05)",
-              },
-            }}
-          />
+          <CharacterCard character={card} sx={{ my: 3 }} />
         </SlideFade>
       ) : (
         <Center my={50}>

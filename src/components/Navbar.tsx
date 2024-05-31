@@ -125,6 +125,7 @@ export default function Navbar() {
               <IconButton
                 aria-label={"Sign in with Discord"}
                 variant="discord"
+                onClick={() => signIn("discord")}
                 icon={<DiscordIcon />}
               />
             ) : (
@@ -200,7 +201,7 @@ export default function Navbar() {
               </Button>
               <Button
                 as={NextLink}
-                href="/characters"
+                href="/manage"
                 width="100%"
                 variant="ghost"
                 justifyContent="space-between"
