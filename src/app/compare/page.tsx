@@ -22,6 +22,7 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  useDisclosure,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
@@ -45,6 +46,7 @@ export default function Compare() {
   const [cards, setCards] = useState<CardType[]>([]);
   const [selectedCards, setSelectedCards] = useState<CardType[]>([]);
   const [searchText, setSearchText] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     fetchAllCards()
@@ -67,8 +69,9 @@ export default function Compare() {
     return (
       <VStack width="100%" height="100%">
         <Menu
+          isOpen={isOpen}
+          onClose={onClose}
           closeOnSelect={false}
-          preventOverflow
           // matchWidth
           // gutter={20}
         >
@@ -79,15 +82,22 @@ export default function Compare() {
               flexGrow={1}
               textAlign="left"
               textOverflow="ellipsis"
+              onClick={onOpen}
             >
               {selectedCards.length} character
               {selectedCards.length !== 1 && "s"} selected
             </MenuButton>
-            <Button onClick={() => setSelectedCards([])} colorScheme="red">
+            <Button
+              onClick={() => {
+                onOpen();
+                setSelectedCards([]);
+              }}
+              colorScheme="red"
+            >
               Clear
             </Button>
           </HStack>
-          <MenuList overflowY="scroll" maxH={350}>
+          <MenuList overflowY="scroll" maxH={350} maxW={350}>
             <MenuOptionGroup
               type="checkbox"
               onChange={(e) =>
@@ -119,7 +129,7 @@ export default function Compare() {
             </Center>
           )}
           <SlideFade in={selectedCards.length > 0}>
-            <SimpleGrid minChildWidth={300} spacing={2}>
+            <SimpleGrid minChildWidth={300} spacing={5}>
               {selectedCards.map((card, i) => (
                 <CharacterCard character={card} key={i} />
               ))}

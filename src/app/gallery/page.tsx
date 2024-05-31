@@ -65,7 +65,7 @@ export default function Gallery() {
       </Box>
       <Box overflowY="auto" flexGrow={1}>
         <SlideFade in={cards.length > 0}>
-          <SimpleGrid minChildWidth={300} spacing={2}>
+          <SimpleGrid minChildWidth={300} spacing={mobile ? 5 : 2}>
             {cards
               .filter((card) =>
                 card.name.toLowerCase().includes(searchText.toLowerCase()),
