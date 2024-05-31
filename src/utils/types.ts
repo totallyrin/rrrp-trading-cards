@@ -29,3 +29,11 @@ export type DiscordProfile = {
   user: DiscordUser;
   bio: string | undefined;
 };
+
+export type User = {
+  id: number;
+  name: string;
+  image: string;
+  admin: boolean;
+  allowlisted: boolean;
+};

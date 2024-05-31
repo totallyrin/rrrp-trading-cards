@@ -1,7 +1,27 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { Card } from "@/utils/types";
+import { Card, User } from "@/utils/types";
+
+export async function fetchAllUsers() {
+  try {
+    return (await sql`SELECT * FROM users`).rows;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to fetch user data.");
+  }
+}
+
+export async function updateUser(user: User) {
+  try {
+    return (
+      await sql`UPDATE users SET name = ${user.name}, image = ${user.image}, admin = ${user.admin}, allowlisted = ${user.allowlisted} WHERE id = ${user.id}`
+    ).rows;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to update user data.");
+  }
+}
 
 export async function fetchAllCards() {
   try {

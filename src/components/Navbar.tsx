@@ -31,6 +31,7 @@ import {
   DragHandleIcon,
   EditIcon,
   HamburgerIcon,
+  LockIcon,
   PlusSquareIcon,
 } from "@chakra-ui/icons";
 import NextLink from "next/link";
@@ -71,7 +72,7 @@ export default function Navbar() {
           </Box>
           <Flex flex="1 1 0" justifyContent="center">
             <Heading as={NextLink} href="/" size="lg" textAlign="center">
-              RRRP Top Trumps
+              RRRP Trading Cards
             </Heading>
           </Flex>
           <Flex flex="1 1 0" justifyContent="flex-end">
@@ -148,7 +149,7 @@ export default function Navbar() {
         <DrawerContent>
           <DrawerHeader>
             <Flex justifyContent="space-between">
-              RRRP Top Trumps
+              RRRP Trading Cards
               <IconButton
                 aria-label="Close"
                 onClick={onClose}
@@ -158,58 +159,78 @@ export default function Navbar() {
             </Flex>
           </DrawerHeader>
           <DrawerBody>
-            <VStack width="100%">
-              <Button
-                as={NextLink}
-                href="/"
-                width="100%"
-                variant="ghost"
-                justifyContent="flex-start"
-                // rightIcon={<StarIcon />}
-              >
-                Home
-              </Button>
-              <Button
-                as={NextLink}
-                href="/gallery"
-                width="100%"
-                variant="ghost"
-                justifyContent="space-between"
-                rightIcon={<DragHandleIcon />}
-              >
-                Gallery
-              </Button>
-              <Button
-                as={NextLink}
-                href="/compare"
-                width="100%"
-                variant="ghost"
-                justifyContent="space-between"
-                rightIcon={<CopyIcon />}
-              >
-                Compare
-              </Button>
-              <Button
-                as={NextLink}
-                href="/create"
-                width="100%"
-                variant="ghost"
-                justifyContent="space-between"
-                rightIcon={<PlusSquareIcon />}
-              >
-                Create Character
-              </Button>
-              <Button
-                as={NextLink}
-                href="/manage"
-                width="100%"
-                variant="ghost"
-                justifyContent="space-between"
-                rightIcon={<EditIcon />}
-              >
-                Manage Characters
-              </Button>
-            </VStack>
+            <Flex
+              flexDirection="column"
+              justifyContent="space-between"
+              height="100%"
+            >
+              <VStack width="100%">
+                <Button
+                  as={NextLink}
+                  href="/"
+                  width="100%"
+                  variant="ghost"
+                  justifyContent="flex-start"
+                  // rightIcon={<StarIcon />}
+                >
+                  Home
+                </Button>
+                <Button
+                  as={NextLink}
+                  href="/gallery"
+                  width="100%"
+                  variant="ghost"
+                  justifyContent="space-between"
+                  rightIcon={<DragHandleIcon />}
+                >
+                  Gallery
+                </Button>
+                <Button
+                  as={NextLink}
+                  href="/compare"
+                  width="100%"
+                  variant="ghost"
+                  justifyContent="space-between"
+                  rightIcon={<CopyIcon />}
+                >
+                  Compare
+                </Button>
+                <Button
+                  as={NextLink}
+                  href="/create"
+                  width="100%"
+                  variant="ghost"
+                  justifyContent="space-between"
+                  rightIcon={<PlusSquareIcon />}
+                >
+                  Create Character
+                </Button>
+                <Button
+                  as={NextLink}
+                  href="/manage"
+                  width="100%"
+                  variant="ghost"
+                  justifyContent="space-between"
+                  rightIcon={<EditIcon />}
+                >
+                  Manage Characters
+                </Button>
+              </VStack>
+              {session?.user?.admin && (
+                <VStack>
+                  <Button
+                    as={NextLink}
+                    href="/admin"
+                    width="100%"
+                    variant="ghost"
+                    justifyContent="space-between"
+                    rightIcon={<LockIcon />}
+                  >
+                    Admin
+                  </Button>
+                </VStack>
+              )}
+            </Flex>
           </DrawerBody>
           <DrawerFooter>
             <Footer condensed />

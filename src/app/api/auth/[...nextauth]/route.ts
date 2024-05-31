@@ -31,6 +31,10 @@ const handler = NextAuth({
     maxAge: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // 24 hours
   },
+  pages: {
+    error: "/",
+    signIn: "/",
+  },
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
@@ -42,7 +46,7 @@ const handler = NextAuth({
           id: profile.user.id,
           name: profile.user.username,
           image: `https://cdn.discordapp.com/avatars/${profile.user.id}/${profile.user.avatar}.png`,
-          role: "user",
+          admin: false,
           allowlisted: profile.roles.includes(roles.allowlisted),
         };
       },

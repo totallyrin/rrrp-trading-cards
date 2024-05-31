@@ -4,7 +4,7 @@ interface CustomUser extends DefaultUser {
   id: number;
   name: string;
   image: string;
-  role: string;
+  admin: boolean;
   allowlisted: boolean;
 }
 

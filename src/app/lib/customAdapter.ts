@@ -43,13 +43,13 @@ export default function CustomPostgresAdapter(client: Pool): Adapter {
 
     async createUser(user: Omit<AdapterUser, "id">) {
       // @ts-ignore
-      const { name, image, role, allowlisted } = user;
+      const { name, image, admin, allowlisted } = user;
       const sql = `
-        INSERT INTO users (name, image, role, allowlisted)
+        INSERT INTO users (name, image, admin, allowlisted)
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (name) DO UPDATE SET image = $2, allowlisted = $4
-        RETURNING id, name, image, role, allowlisted`;
-      const result = await client.query(sql, [name, image, role, allowlisted]);
+        RETURNING id, name, image, admin, allowlisted`;
+      const result = await client.query(sql, [name, image, admin, allowlisted]);
       return result.rows[0];
     },
     async getUser(id) {
