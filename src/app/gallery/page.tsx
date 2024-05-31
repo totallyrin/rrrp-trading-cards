@@ -14,10 +14,15 @@ import {
   SimpleGrid,
   SlideFade,
   Spinner,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 
 export default function Gallery() {
+  const [mobile] = useMediaQuery("(orientation: portrait)", {
+    ssr: true,
+    fallback: true,
+  });
   const [cards, setCards] = useState<CardType[]>([]);
   const [searchText, setSearchText] = useState("");
 
@@ -69,13 +74,17 @@ export default function Gallery() {
                 <CharacterCard
                   character={card}
                   key={i}
-                  sx={{
-                    transform: "scale(0.96)",
-                    transition: "all 0.2s ease-in-out",
-                    _hover: {
-                      transform: "scale(1)",
-                    },
-                  }}
+                  sx={
+                    mobile
+                      ? {}
+                      : {
+                          transform: "scale(0.96)",
+                          transition: "all 0.2s ease-in-out",
+                          _hover: {
+                            transform: "scale(1)",
+                          },
+                        }
+                  }
                 />
               ))}
           </SimpleGrid>
