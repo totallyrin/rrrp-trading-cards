@@ -152,7 +152,7 @@ export default function Characters() {
                 card.name.toLowerCase().includes(searchText.toLowerCase()),
               )
               .map((card, i) => (
-                <Box key={card.id}>
+                <Box key={card.id} width="100%">
                   {i > 0 && <Divider my={2} />}
                   <HStack
                     width="100%"
