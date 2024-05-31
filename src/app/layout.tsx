@@ -4,8 +4,8 @@ import { Providers } from "@/app/providers";
 import { ColorModeScript } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
-  title: "Top Trumps",
-  description: "Top Trumps",
+  title: "RRRP Trading Cards",
+  description: "RRRP Trading Cards",
 };
 
 export default function RootLayout({
