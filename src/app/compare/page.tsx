@@ -72,7 +72,7 @@ export default function Compare() {
           isOpen={isOpen}
           onClose={onClose}
           closeOnSelect={false}
-          // matchWidth
+          matchWidth
           // gutter={20}
         >
           <HStack width="100%" spacing={5}>
@@ -97,7 +97,7 @@ export default function Compare() {
               Clear
             </Button>
           </HStack>
-          <MenuList overflowY="scroll" maxH={350} maxW={350}>
+          <MenuList overflowY="scroll" maxH={350}>
             <MenuOptionGroup
               type="checkbox"
               onChange={(e) =>
