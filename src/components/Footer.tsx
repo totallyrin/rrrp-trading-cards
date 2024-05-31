@@ -53,7 +53,7 @@ export default function Footer({ condensed = false }) {
           <LinkBox>
             <LinkOverlay
               as={NextLink}
-              href="https://github.com/totallyrin/rrrp-top-trumps"
+              href="https://github.com/totallyrin/rrrp-trading-cards"
               isExternal
             >
               {condensed || mobile ? (
