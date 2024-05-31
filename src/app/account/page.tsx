@@ -7,11 +7,11 @@ import {
   Divider,
   Flex,
   Heading,
+  HStack,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
   SlideFade,
-  Tag,
   Text,
   useMediaQuery,
   VStack,
@@ -74,10 +74,10 @@ export default function Account() {
         />
       )}
       {session ? (
-        <VStack>
-          <Tag>{session?.user.role.toUpperCase()}</Tag>
+        <HStack>
+          {session?.user.admin && <Badge>Admin</Badge>}
           {session?.user.allowlisted && <Badge>Allowlisted</Badge>}
-        </VStack>
+        </HStack>
       ) : (
         <Skeleton width={75} height={6} />
       )}
