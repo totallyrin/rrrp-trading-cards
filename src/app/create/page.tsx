@@ -247,8 +247,8 @@ export default function Create() {
           </FormControl>
         </Flex>
       </HStack>
-      <VStack justifyContent="center" width="100%">
-        <Flex flexDirection="column" width="100%" mb={5}>
+      <VStack width="100%">
+        <Flex flexDirection="column" width="100%" mb={5} px={2}>
           <FormControl>
             <CustomSlider
               card={card}
