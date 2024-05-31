@@ -118,6 +118,7 @@ export default function Admin() {
                   <Td isNumeric>
                     <Button
                       size="xs"
+                      colorScheme="blue"
                       onClick={() => {
                         updateUser(user)
                           .then(() => {
