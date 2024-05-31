@@ -48,7 +48,7 @@ export default function Create() {
   const toast = useToast();
 
   useEffect(() => {
-    if (session?.user.role !== "admin" && session?.user.name)
+    if (session?.user.admin && session?.user.name)
       fetchUserCards(session.user.name)
         .then((cards) => {
           setCards(cards as CardType[]);
@@ -56,7 +56,7 @@ export default function Create() {
         .catch((error) => {
           console.error(error);
         });
-  }, [session?.user.role, session?.user.name]);
+  }, [session?.user.admin, session?.user.name]);
 
   if (session === null)
     return (
@@ -164,7 +164,7 @@ export default function Create() {
                     image: e.target.value,
                   })
                 }
-                isDisabled={session.user.role !== "admin"}
+                isDisabled={!session.user.admin}
               />
             </Box>
             <Box py={1}>
@@ -227,7 +227,7 @@ export default function Create() {
                 }
               />
             </Box>
-            {session.user.role === "admin" && (
+            {session.user.admin && (
               <Box py={1}>
                 <Heading size="xs" p={2}>
                   Owner
