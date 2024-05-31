@@ -42,7 +42,10 @@ import { DiscordIcon } from "@/components/icons/DiscordIcon";
 export default function Navbar() {
   const { data: session } = useSession();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [mobile] = useMediaQuery("(orientation: portrait)");
+  const [mobile] = useMediaQuery("(orientation: portrait)", {
+    ssr: true,
+    fallback: true,
+  });
 
   return (
     <>

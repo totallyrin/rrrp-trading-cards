@@ -12,7 +12,7 @@ import {
   HStack,
   Input,
   Spinner,
-  Text,
+  Tag,
   Textarea,
   useToast,
   VStack,
@@ -22,7 +22,8 @@ import { addCard, fetchUserCards } from "@/app/lib/data";
 import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Card as CardType } from "@/utils/types";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { DiscordIcon } from "@/components/icons/DiscordIcon";
 
 export default function Create() {
   const { data: session } = useSession();
@@ -46,8 +47,6 @@ export default function Create() {
   });
   const toast = useToast();
 
-  console.log(session);
-
   useEffect(() => {
     if (session?.user.role !== "admin" && session?.user.name)
       fetchUserCards(session.user.name)
@@ -61,11 +60,21 @@ export default function Create() {
 
   if (session === null)
     return (
-      <VStack height="100%" pt={10}>
-        <Text textAlign="center" mb={3}>
-          You must be signed in to manage your characters.
-        </Text>
-        <Button onClick={() => signIn()}>Click here to sign in!</Button>
+      <VStack height="100%" spacing={5}>
+        <Tag
+          textAlign="center"
+          // colorScheme="red"
+        >
+          You must be signed in to create a character.
+        </Tag>
+        <Button
+          variant="discord"
+          onClick={() => signIn("discord")}
+          leftIcon={<DiscordIcon />}
+          rightIcon={<ChevronRightIcon />}
+        >
+          Sign in with Discord
+        </Button>
       </VStack>
     );
 
@@ -79,17 +88,17 @@ export default function Create() {
   if (!session.user.allowlisted)
     return (
       <Center height="100%">
-        <Text>
+        <Tag>
           You do not have permission to create characters. You need to have the{" "}
           <Badge>Allowlisted</Badge> role.
-        </Text>
+        </Tag>
       </Center>
     );
 
   if (cards.length >= 3)
     return (
       <Center height="100%">
-        <Text>You have reached the maximum number of characters (3).</Text>
+        <Tag>You have reached the maximum number of characters (3).</Tag>
       </Center>
     );
 
