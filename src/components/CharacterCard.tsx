@@ -36,7 +36,7 @@ export default function CharacterCard({
         <HStack justifyContent="space-between" alignItems="flex-start">
           <Heading size="sm">{character.name}</Heading>
           {character.pronouns && (
-            <Tag whiteSpace="nowrap" size="sm">
+            <Tag whiteSpace="nowrap" minWidth="fit-content" size="sm">
               {character.pronouns}
             </Tag>
           )}
