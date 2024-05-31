@@ -95,7 +95,7 @@ export default function Account() {
           </Flex>
           <Button
             as={NextLink}
-            href={"/characters"}
+            href={"/manage"}
             rightIcon={<EditIcon />}
             mt={1}
           >
