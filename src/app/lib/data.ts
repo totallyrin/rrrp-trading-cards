@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { Card, User } from "@/utils/types";
+import { Card, User, VerifyImage } from "@/utils/types";
 
 export async function fetchAllUsers() {
   try {
@@ -111,6 +111,33 @@ WHERE id = ${card.id}`;
   } catch (error) {
     console.error("Database error:", error);
     throw new Error(`Failed to delete card "${card.name}".`);
+  }
+}
+
+export async function deleteImage(image: VerifyImage) {
+  try {
+    await sql`
+DELETE FROM images
+WHERE id = ${image.id}`;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(`Failed to delete image "${image.image}".`);
+  }
+}
+
+export async function approveImage(image: VerifyImage) {
+  try {
+    await sql`
+UPDATE cards
+SET
+image = ${image.image}
+WHERE
+name = ${image.character} AND owner = ${image.user};
+`;
+    await deleteImage(image);
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(`Failed to approve image "${image.image}".`);
   }
 }
 

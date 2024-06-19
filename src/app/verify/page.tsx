@@ -2,17 +2,20 @@
 
 import { useSession } from "next-auth/react";
 import {
+  AspectRatio,
   Badge,
   Box,
   Button,
   Center,
-  Checkbox,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
+  SlideFade,
   Spinner,
   Table,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Th,
@@ -21,21 +24,22 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { User } from "@/utils/types";
+import { VerifyImage } from "@/utils/types";
 import React, { useEffect, useState } from "react";
-import { fetchAllUsers, updateUser } from "@/app/lib/data";
+import { approveImage, deleteImage, fetchAllImages } from "@/app/lib/data";
 import { Search2Icon } from "@chakra-ui/icons";
+import { Image } from "@chakra-ui/next-js";
 
 export default function Verify() {
   const { data: session } = useSession();
-  const [users, setUsers] = useState<User[]>();
+  const [images, setImages] = useState<VerifyImage[]>([]);
   const [searchText, setSearchText] = useState("");
   const toast = useToast();
 
   useEffect(() => {
-    fetchAllUsers()
-      .then((users) => {
-        setUsers(users as User[]);
+    fetchAllImages()
+      .then((imgs) => {
+        setImages(imgs as VerifyImage[]);
       })
       .catch((error) => {
         console.error(error);
@@ -79,77 +83,125 @@ export default function Verify() {
           />
         </InputGroup>
       </Box>
+      {images.length === 0 && (
+        <Center>
+          <Tag>No images found.</Tag>
+        </Center>
+      )}
       <TableContainer width="100%" overflowY="scroll">
-        <Table size="sm">
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th textAlign="center">Admin</Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {users
-              ?.filter((user) => {
-                if (searchText === "") return true;
-                return user.name
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase());
-              })
-              .map((user) => (
-                <Tr key={user.id}>
-                  <Td>{user.name}</Td>
-                  <Td>
-                    <Center>
-                      <Checkbox
-                        isChecked={user.admin}
-                        isDisabled={user.name === "totallyrin"}
-                        onChange={(e) => {
-                          const updatedUsers = users.map((u) => {
-                            if (u.id === user.id && u.name !== "totallyrin") {
-                              return { ...u, admin: e.target.checked };
-                            }
-                            return u;
-                          });
-                          setUsers(updatedUsers);
-                        }}
-                      />
-                    </Center>
-                  </Td>
-                  <Td isNumeric>
-                    <Button
-                      size="xs"
-                      colorScheme="blue"
-                      isDisabled={user.name === "totallyrin"}
-                      onClick={() => {
-                        if (user.name !== "totallyrin")
-                          updateUser(user)
-                            .then(() => {
-                              toast({
-                                title: `${user.name} saved.`,
-                                status: "success",
-                                duration: 3000,
-                                isClosable: true,
+        <SlideFade in={images.length > 0}>
+          <Table size="sm">
+            <Thead>
+              <Tr>
+                <Th>Username</Th>
+                <Th>Character</Th>
+                <Th>
+                  <Center>Image</Center>
+                </Th>
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {images
+                ?.filter((img) => {
+                  if (searchText === "") return true;
+                  return (
+                    img.character
+                      .toLowerCase()
+                      .includes(searchText.toLowerCase()) ||
+                    img.user.toLowerCase().includes(searchText.toLowerCase())
+                  );
+                })
+                .map((img) => (
+                  <Tr key={img.id}>
+                    <Td>{img.user}</Td>
+                    <Td>{img.character}</Td>
+                    <Td>
+                      <AspectRatio
+                        borderWidth="3px"
+                        mx={4}
+                        borderRadius="md"
+                        position="relative"
+                        ratio={3 / 2}
+                      >
+                        <Image
+                          src={img.image}
+                          alt={img.character}
+                          fill
+                          sizes="450px"
+                          priority={false}
+                          borderRadius="sm"
+                          sx={{
+                            objectFit: "cover",
+                          }}
+                        />
+                      </AspectRatio>
+                    </Td>
+                    <Td isNumeric>
+                      <HStack justifyContent="flex-end">
+                        <Button
+                          colorScheme="green"
+                          onClick={() => {
+                            approveImage(img)
+                              .then(() => {
+                                setImages(
+                                  images?.filter((i) => i.id !== img.id),
+                                );
+                                toast({
+                                  title: `Image for ${img.character} approved.`,
+                                  status: "success",
+                                  duration: 3000,
+                                  isClosable: true,
+                                });
+                              })
+                              .catch((e) => {
+                                console.error(e);
+                                toast({
+                                  title: `Image for ${img.character} failed to save.\n${e}`,
+                                  status: "error",
+                                  duration: 3000,
+                                  isClosable: true,
+                                });
                               });
-                            })
-                            .catch((e) => {
-                              console.error(e);
-                              toast({
-                                title: `${user.name} failed to save.\n${e}`,
-                                status: "error",
-                                duration: 3000,
-                                isClosable: true,
+                          }}
+                        >
+                          APPROVE
+                        </Button>
+                        <Button
+                          colorScheme="red"
+                          onClick={() => {
+                            deleteImage(img)
+                              .then(() => {
+                                setImages(
+                                  images?.filter((i) => i.id !== img.id),
+                                );
+                                toast({
+                                  title: `Image for ${img.character} deleted.`,
+                                  status: "success",
+                                  duration: 3000,
+                                  isClosable: true,
+                                });
+                              })
+                              .catch((e) => {
+                                console.error(e);
+                                toast({
+                                  title: `Image for ${img.character} failed to delete.\n${e}`,
+                                  status: "error",
+                                  duration: 3000,
+                                  isClosable: true,
+                                });
                               });
-                            });
-                      }}
-                    >
-                      SAVE
-                    </Button>
-                  </Td>
-                </Tr>
-              ))}
-          </Tbody>
-        </Table>
+                          }}
+                        >
+                          DELETE
+                        </Button>
+                      </HStack>
+                    </Td>
+                  </Tr>
+                ))}
+            </Tbody>
+          </Table>
+        </SlideFade>
       </TableContainer>
     </VStack>
   );

@@ -122,40 +122,51 @@ export default function Characters() {
 
   useEffect(() => {
     if (session?.user.admin) {
-      allImages.forEach((image) => {
-        const card = allFetchedCards.find((c) => c.name === image.character);
-        if (card) {
-          const updatedCards = allFetchedCards.map((c) => {
-            if (c.name === card.name) {
-              return {
-                ...c,
-                newimage: image.image,
-              };
-            }
-            return c;
-          });
-          setAllCards(updatedCards);
-          setCards(
-            updatedCards.filter((card) => card.owner === session.user.name),
-          );
-        }
-      });
+      if (allImages.length === 0) {
+        setAllCards(allFetchedCards);
+        setCards(
+          allFetchedCards.filter((card) => card.owner === session.user.name),
+        );
+      } else
+        allImages.forEach((image) => {
+          const card = allFetchedCards.find((c) => c.name === image.character);
+          if (card) {
+            const updatedCards = allFetchedCards.map((c) => {
+              if (c.name === card.name) {
+                return {
+                  ...c,
+                  newimage: image.image,
+                };
+              }
+              return c;
+            });
+            setAllCards(updatedCards);
+            setCards(
+              updatedCards.filter((card) => card.owner === session.user.name),
+            );
+          }
+        });
     } else {
-      images.map((image) => {
-        const card = fetchedCards.find((card) => card.name === image.character);
-        if (card) {
-          const updatedCards = fetchedCards.map((c) => {
-            if (c.name === card.name) {
-              return {
-                ...c,
-                newimage: image.image,
-              };
-            }
-            return c;
-          });
-          setCards(updatedCards);
-        }
-      });
+      if (images.length === 0) {
+        setCards(fetchedCards);
+      } else
+        images.map((image) => {
+          const card = fetchedCards.find(
+            (card) => card.name === image.character,
+          );
+          if (card) {
+            const updatedCards = fetchedCards.map((c) => {
+              if (c.name === card.name) {
+                return {
+                  ...c,
+                  newimage: image.image,
+                };
+              }
+              return c;
+            });
+            setCards(updatedCards);
+          }
+        });
     }
   }, [
     session?.user.admin,
