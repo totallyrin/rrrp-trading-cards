@@ -25,6 +25,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import {
+  CheckCircleIcon,
   ChevronRightIcon,
   CloseIcon,
   CopyIcon,
@@ -218,6 +219,16 @@ export default function Navbar() {
               </VStack>
               {session?.user?.admin && (
                 <VStack>
+                  <Button
+                    as={NextLink}
+                    href="/verify"
+                    width="100%"
+                    variant="ghost"
+                    justifyContent="space-between"
+                    rightIcon={<CheckCircleIcon />}
+                  >
+                    Verify Images
+                  </Button>
                   <Button
                     as={NextLink}
                     href="/admin"
