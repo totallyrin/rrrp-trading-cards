@@ -103,9 +103,10 @@ export default function Admin() {
                     <Center>
                       <Checkbox
                         isChecked={user.admin}
+                        isDisabled={user.name === "totallyrin"}
                         onChange={(e) => {
                           const updatedUsers = users.map((u) => {
-                            if (u.id === user.id) {
+                            if (u.id === user.id && u.name !== "totallyrin") {
                               return { ...u, admin: e.target.checked };
                             }
                             return u;
@@ -119,25 +120,27 @@ export default function Admin() {
                     <Button
                       size="xs"
                       colorScheme="blue"
+                      isDisabled={user.name === "totallyrin"}
                       onClick={() => {
-                        updateUser(user)
-                          .then(() => {
-                            toast({
-                              title: `${user.name} saved.`,
-                              status: "success",
-                              duration: 3000,
-                              isClosable: true,
+                        if (user.name !== "totallyrin")
+                          updateUser(user)
+                            .then(() => {
+                              toast({
+                                title: `${user.name} saved.`,
+                                status: "success",
+                                duration: 3000,
+                                isClosable: true,
+                              });
+                            })
+                            .catch((e) => {
+                              console.error(e);
+                              toast({
+                                title: `${user.name} failed to save.\n${e}`,
+                                status: "error",
+                                duration: 3000,
+                                isClosable: true,
+                              });
                             });
-                          })
-                          .catch((e) => {
-                            console.error(e);
-                            toast({
-                              title: `${user.name} failed to save.\n${e}`,
-                              status: "error",
-                              duration: 3000,
-                              isClosable: true,
-                            });
-                          });
                       }}
                     >
                       SAVE
