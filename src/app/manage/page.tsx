@@ -196,7 +196,10 @@ export default function Characters() {
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
                               if (c.id === card.id) {
-                                return { ...c, pronouns: e.target.value };
+                                return {
+                                  ...c,
+                                  pronouns: e.target.value.toLowerCase(),
+                                };
                               }
                               return c;
                             });
