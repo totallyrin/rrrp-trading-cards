@@ -79,7 +79,7 @@ export default function Admin() {
           />
         </InputGroup>
       </Box>
-      <TableContainer width="100%">
+      <TableContainer width="100%" overflowY="scroll">
         <Table size="sm">
           <Thead>
             <Tr>
