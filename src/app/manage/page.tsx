@@ -329,13 +329,13 @@ export default function Characters() {
                                   isError.filter((i) => i !== card.id),
                                 );
                                 if (c.id === card.id) {
-                                  // if (session.user.admin)
-                                  //   return {
-                                  //     ...c,
-                                  //     image: e.target.value,
-                                  //   };
-                                  // else
-                                  return { ...c, newimage: e.target.value };
+                                  if (session.user.admin)
+                                    return {
+                                      ...c,
+                                      image: e.target.value,
+                                    };
+                                  else
+                                    return { ...c, newimage: e.target.value };
                                 }
                               } else setIsError([...isError, card.id]);
                               return c;
