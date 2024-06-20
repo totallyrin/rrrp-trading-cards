@@ -2,11 +2,13 @@
 
 import { signIn, useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
-import { Card as CardType } from "@/utils/types";
+import { Card as CardType, VerifyImage } from "@/utils/types";
 import {
   deleteCard,
   fetchAllCards,
+  fetchAllImages,
   fetchUserCards,
+  fetchUserImages,
   updateCard,
 } from "@/app/lib/data";
 import {
@@ -20,8 +22,13 @@ import {
   Box,
   Button,
   Center,
+  Code,
   Divider,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
   Heading,
   HStack,
   Input,
@@ -33,6 +40,7 @@ import {
   TabList,
   Tabs,
   Tag,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -47,18 +55,43 @@ export default function Characters() {
   const { data: session } = useSession();
   const [allCards, setAllCards] = useState<CardType[]>([]);
   const [cards, setCards] = useState<CardType[]>([]);
+  const [allFetchedCards, setAllFetchedCards] = useState<CardType[]>([]);
+  const [fetchedCards, setFetchedCards] = useState<CardType[]>([]);
+  const [images, setImages] = useState<VerifyImage[]>([]);
+  const [allImages, setAllImages] = useState<VerifyImage[]>([]);
+  const [pendingImages, setPendingImages] = useState<string[]>([]);
   const [modalCard, setModalCard] = useState<CardType | undefined>(undefined);
   const [searchText, setSearchText] = useState("");
+  const [isError, setIsError] = useState<number[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const toast = useToast();
 
   useEffect(() => {
-    if (session?.user.admin)
+    if (session?.user.admin) {
+      fetchAllImages()
+        .then((imgs) => {
+          setAllImages(imgs as VerifyImage[]);
+          setImages(
+            imgs.filter(
+              (image) => image.user === session?.user.name,
+            ) as VerifyImage[],
+          );
+          setPendingImages(imgs.map((i) => i.character));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       fetchAllCards()
         .then((cards) => {
-          setAllCards(cards as CardType[]);
-          setCards(
+          // setAllCards(cards as CardType[]);
+          setAllFetchedCards(cards as CardType[]);
+          // setCards(
+          //   cards.filter(
+          //     (card) => card.owner === session.user.name,
+          //   ) as CardType[],
+          // );
+          setFetchedCards(
             cards.filter(
               (card) => card.owner === session.user.name,
             ) as CardType[],
@@ -67,15 +100,82 @@ export default function Characters() {
         .catch((error) => {
           console.error(error);
         });
-    else if (session?.user.name)
-      fetchUserCards(session.user.name)
-        .then((cards) => {
-          setCards(cards as CardType[]);
+    } else if (session?.user.name) {
+      fetchUserImages(session.user.name)
+        .then((imgs) => {
+          setImages(imgs as VerifyImage[]);
+          setPendingImages(imgs.map((i) => i.character));
         })
         .catch((error) => {
           console.error(error);
         });
+      fetchUserCards(session.user.name)
+        .then((cards) => {
+          // setCards(cards as CardType[]);
+          setFetchedCards(cards as CardType[]);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }, [session?.user.admin, session?.user.name]);
+
+  useEffect(() => {
+    if (session?.user.admin) {
+      if (allImages.length === 0) {
+        setAllCards(allFetchedCards);
+        setCards(
+          allFetchedCards.filter((card) => card.owner === session.user.name),
+        );
+      } else
+        allImages.forEach((image) => {
+          const card = allFetchedCards.find((c) => c.name === image.character);
+          if (card) {
+            const updatedCards = allFetchedCards.map((c) => {
+              if (c.name === card.name) {
+                return {
+                  ...c,
+                  newimage: image.image,
+                };
+              }
+              return c;
+            });
+            setAllCards(updatedCards);
+            setCards(
+              updatedCards.filter((card) => card.owner === session.user.name),
+            );
+          }
+        });
+    } else {
+      if (images.length === 0) {
+        setCards(fetchedCards);
+      } else
+        images.map((image) => {
+          const card = fetchedCards.find(
+            (card) => card.name === image.character,
+          );
+          if (card) {
+            const updatedCards = fetchedCards.map((c) => {
+              if (c.name === card.name) {
+                return {
+                  ...c,
+                  newimage: image.image,
+                };
+              }
+              return c;
+            });
+            setCards(updatedCards);
+          }
+        });
+    }
+  }, [
+    session?.user.admin,
+    session?.user.name,
+    allImages,
+    images,
+    allFetchedCards,
+    fetchedCards,
+  ]);
 
   if (session === null)
     return (
@@ -161,7 +261,10 @@ export default function Characters() {
                     flexWrap="wrap"
                   >
                     <CharacterCard
-                      character={card}
+                      character={{
+                        ...card,
+                        image: card.newimage ?? card.image ?? "",
+                      }}
                       sx={{
                         flexGrow: 1,
                       }}
@@ -207,25 +310,69 @@ export default function Characters() {
                           }}
                         />
                       </Box>
-                      <Box py={1}>
-                        <Heading size="xs" p={2}>
+                      <FormControl py={1} isInvalid={isError.includes(card.id)}>
+                        <Heading as={FormLabel} size="xs" p={2} pb={0}>
                           Image Link
                         </Heading>
                         <Input
                           placeholder="https://example.com/image.jpg"
-                          value={card.image ?? ""}
+                          defaultValue={card.newimage ?? card.image ?? ""}
                           onChange={(e) => {
                             const updatedCards = cards.map((c) => {
-                              if (c.id === card.id) {
-                                return { ...c, image: e.target.value };
-                              }
+                              if (
+                                /https:\/\/(cdn\.discordapp\.com|media\.discordapp\.net)\/attachments\/.*$/.test(
+                                  e.target.value,
+                                ) ||
+                                e.target.value === ""
+                              ) {
+                                setIsError(
+                                  isError.filter((i) => i !== card.id),
+                                );
+                                if (c.id === card.id) {
+                                  // if (session.user.admin)
+                                  //   return {
+                                  //     ...c,
+                                  //     image: e.target.value,
+                                  //   };
+                                  // else
+                                  return { ...c, newimage: e.target.value };
+                                }
+                              } else setIsError([...isError, card.id]);
                               return c;
                             });
                             setCards(updatedCards);
                           }}
                           isDisabled={!session.user.admin}
                         />
-                      </Box>
+                        {!isError.includes(card.id) ? (
+                          !session.user.admin || (
+                            <FormHelperText
+                              pl={2}
+                              mt={1}
+                              overflowWrap="break-word"
+                            >
+                              {pendingImages.includes(card.name)
+                                ? "This image is waiting to be verified."
+                                : "Images need to be verified before they" +
+                                  " appear publicly."}
+                            </FormHelperText>
+                          )
+                        ) : (
+                          <FormErrorMessage pl={2} mt={1}>
+                            <Text overflowWrap="break-word">
+                              Image link must match
+                              <Code mx={2} colorScheme="red">
+                                https://cdn.discordapp.com/attachments/...
+                              </Code>
+                              <br />
+                              or
+                              <Code mx={2} colorScheme="red">
+                                https://media.discordapp.net/attachments/...
+                              </Code>
+                            </Text>
+                          </FormErrorMessage>
+                        )}
+                      </FormControl>
                       <Box py={1}>
                         <Heading size="xs" p={2}>
                           Occupation

@@ -8,6 +8,7 @@ export type Card = {
   rizz: number;
   serving_cunt: number;
   image: string | undefined;
+  newimage?: string | undefined;
   id: number;
   residence: string | undefined;
   occupation: string | undefined;
@@ -36,4 +37,11 @@ export type User = {
   image: string;
   admin: boolean;
   allowlisted: boolean;
+};
+
+export type VerifyImage = {
+  id: number;
+  user: string;
+  character: string;
+  image: string;
 };

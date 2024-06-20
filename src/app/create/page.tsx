@@ -6,19 +6,23 @@ import {
   Box,
   Button,
   Center,
+  Code,
   Flex,
   FormControl,
+  FormErrorMessage,
+  FormHelperText,
   Heading,
   HStack,
   Input,
   Spinner,
   Tag,
+  Text,
   Textarea,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import CustomSlider from "@/components/CustomSlider";
-import { addCard, fetchUserCards } from "@/app/lib/data";
+import { addCard, addImage, fetchUserCards } from "@/app/lib/data";
 import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { Card as CardType } from "@/utils/types";
@@ -27,8 +31,7 @@ import { DiscordIcon } from "@/components/icons/DiscordIcon";
 
 export default function Create() {
   const { data: session } = useSession();
-  const [cards, setCards] = useState<CardType[]>([]);
-  const [card, setCard] = useState<CardType>({
+  const defaultCard = {
     name: "",
     pronouns: "",
     strength: 1,
@@ -44,7 +47,11 @@ export default function Create() {
     quote: undefined,
     special_interest: undefined,
     owner: session?.user.name ?? "",
-  });
+  };
+  const [cards, setCards] = useState<CardType[]>([]);
+  const [card, setCard] = useState<CardType>(defaultCard);
+  const [isError, setIsError] = useState(false);
+  const [image, setImage] = useState("");
   const toast = useToast();
 
   useEffect(() => {
@@ -95,7 +102,7 @@ export default function Create() {
       </Center>
     );
 
-  if (cards.length >= 3)
+  if (!session.user.admin && cards.length >= 3)
     return (
       <Center height="100%">
         <Tag>You have reached the maximum number of characters (3).</Tag>
@@ -151,22 +158,54 @@ export default function Create() {
                 }
               />
             </Box>
-            <Box py={1}>
+            <FormControl py={1} isInvalid={isError}>
               <Heading size="xs" p={2}>
                 Image Link
               </Heading>
               <Input
                 placeholder="https://example.com/image.jpg"
-                value={card.image ?? ""}
-                onChange={(e) =>
-                  setCard({
-                    ...card,
-                    image: e.target.value,
-                  })
-                }
+                defaultValue={card.image ?? ""}
+                value={image}
+                onChange={(e) => {
+                  setImage(e.target.value);
+                  if (
+                    /https:\/\/(cdn\.discordapp\.com|media\.discordapp\.net)\/attachments\/.*$/.test(
+                      e.target.value,
+                    ) ||
+                    e.target.value === ""
+                  ) {
+                    setIsError(false);
+                    setCard({
+                      ...card,
+                      image: e.target.value,
+                    });
+                  } else setIsError(true);
+                }}
                 isDisabled={!session.user.admin}
               />
-            </Box>
+              {!isError ? (
+                !session.user.admin || (
+                  <FormHelperText pl={2} mt={1} overflowWrap="break-word">
+                    {"Images need to be verified before they" +
+                      " appear publicly."}
+                  </FormHelperText>
+                )
+              ) : (
+                <FormErrorMessage pl={2} mt={1}>
+                  <Text overflowWrap="break-word">
+                    Image link must match
+                    <Code mx={2} colorScheme="red">
+                      https://cdn.discordapp.com/attachments/...
+                    </Code>
+                    <br />
+                    or
+                    <Code mx={2} colorScheme="red">
+                      https://media.discordapp.net/attachments/...
+                    </Code>
+                  </Text>
+                </FormErrorMessage>
+              )}
+            </FormControl>
             <Box py={1}>
               <Heading size="xs" p={2}>
                 Occupation
@@ -298,9 +337,34 @@ export default function Create() {
           colorScheme="green"
           rightIcon={<PlusSquareIcon />}
           onClick={() => {
-            if (card.name.length > 0)
-              addCard({ ...card, owner: session.user.name ?? "" })
+            if (card.name.length > 0) {
+              if (!session.user.admin) {
+                addImage(card)
+                  .then(() =>
+                    setCard({
+                      ...card,
+                      image: "",
+                    }),
+                  )
+                  .catch((e) => {
+                    console.error(e);
+                    toast({
+                      title: `${card.name} could not be created.\n${e}`,
+                      status: "error",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                    return;
+                  });
+              }
+              addCard({
+                ...card,
+                image: session.user.admin ? card.image : "",
+                owner: card.owner ?? session.user.name ?? "",
+              })
                 .then(() => {
+                  setCard(defaultCard);
+                  setImage("");
                   toast({
                     title: `${card.name} created.`,
                     status: "success",
@@ -317,7 +381,7 @@ export default function Create() {
                     isClosable: true,
                   });
                 });
-            else {
+            } else {
               toast({
                 title: "Name cannot be empty.",
                 status: "error",
