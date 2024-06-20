@@ -352,7 +352,7 @@ export default function Characters() {
                               overflowWrap="break-word"
                             >
                               {pendingImages.includes(card.name)
-                                ? "This character has a pending image."
+                                ? "This image is waiting to be verified."
                                 : "Images need to be verified before they" +
                                   " appear publicly."}
                             </FormHelperText>

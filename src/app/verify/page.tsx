@@ -76,18 +76,18 @@ export default function Verify() {
           </InputLeftElement>
           <Input
             type="text"
-            placeholder="Search by name"
+            placeholder="Search by username or character name"
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
           />
         </InputGroup>
       </Box>
-      {images.length === 0 && (
+      <SlideFade in={images.length === 0}>
         <Center>
-          <Tag>No images found.</Tag>
+          <Tag mt={3}>No images found.</Tag>
         </Center>
-      )}
+      </SlideFade>
       <TableContainer width="100%" overflowY="scroll">
         <SlideFade in={images.length > 0}>
           <Table size="sm">

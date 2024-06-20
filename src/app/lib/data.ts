@@ -67,15 +67,7 @@ VALUES (${card.name}, ${card.pronouns}, ${card.strength}, ${card.comedic_timing}
 
 export async function updateCard(card: Card) {
   if (card.newimage && card.newimage !== card.image) {
-    try {
-      await sql`
-INSERT INTO images ("user", character, image)
-VALUES (${card.owner}, ${card.name}, ${card.newimage})
-ON CONFLICT (character) DO UPDATE SET image = ${card.newimage}`;
-    } catch (error) {
-      console.error("Database error:", error);
-      throw new Error(`Failed to add image "${card.name}".`);
-    }
+    await addImage(card);
   }
   try {
     await sql`
@@ -111,6 +103,18 @@ WHERE id = ${card.id}`;
   } catch (error) {
     console.error("Database error:", error);
     throw new Error(`Failed to delete card "${card.name}".`);
+  }
+}
+
+export async function addImage(card: Card) {
+  try {
+    await sql`
+INSERT INTO images ("user", character, image)
+VALUES (${card.owner}, ${card.name}, ${card.newimage ?? card.image})
+ON CONFLICT (character) DO UPDATE SET image = ${card.newimage ?? card.image}`;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error(`Failed to add image "${card.name}".`);
   }
 }
 
