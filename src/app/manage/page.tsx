@@ -342,7 +342,7 @@ export default function Characters() {
                             });
                             setCards(updatedCards);
                           }}
-                          isDisabled={!session.user.admin}
+                          // isDisabled={!session.user.admin}
                         />
                         {!isError.includes(card.id) ? (
                           !session.user.admin || (
