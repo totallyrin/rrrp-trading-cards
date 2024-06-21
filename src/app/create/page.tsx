@@ -153,7 +153,7 @@ export default function Create() {
                 onChange={(e) =>
                   setCard({
                     ...card,
-                    pronouns: e.target.value,
+                    pronouns: e.target.value.toLowerCase(),
                   })
                 }
               />
