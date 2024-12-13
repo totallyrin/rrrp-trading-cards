@@ -336,7 +336,7 @@ export default function Create() {
         <Button
           colorScheme="green"
           rightIcon={<PlusSquareIcon />}
-          onClick={() => {
+          onClick={async () => {
             if (card.name.length > 0) {
               if (!session.user.admin) {
                 addImage(card)
@@ -356,31 +356,78 @@ export default function Create() {
                     });
                     return;
                   });
-              }
-              addCard({
-                ...card,
-                image: session.user.admin ? card.image : "",
-                owner: card.owner ?? session.user.name ?? "",
-              })
-                .then(() => {
-                  setCard(defaultCard);
-                  setImage("");
-                  toast({
-                    title: `${card.name} created.`,
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                  });
+                addCard({
+                  ...card,
+                  image: "",
+                  owner: card.owner ?? session.user.name ?? "",
                 })
-                .catch((e) => {
-                  console.error(e);
-                  toast({
-                    title: `${card.name} could not be created.\n${e}`,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
+                  .then(() => {
+                    setCard(defaultCard);
+                    setImage("");
+                    toast({
+                      title: `${card.name} created.`,
+                      status: "success",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                  })
+                  .catch((e) => {
+                    console.error(e);
+                    toast({
+                      title: `${card.name} could not be created.\n${e}`,
+                      status: "error",
+                      duration: 3000,
+                      isClosable: true,
+                    });
                   });
-                });
+              } else {
+                try {
+                  const response = await fetch("/api/upload-image", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      url: card.image,
+                      contentType: "image/jpeg",
+                    }),
+                  });
+
+                  const data = await response.json();
+                  if (response.ok) {
+                    await setCard({
+                      ...card,
+                      image: data.imageUrl,
+                    });
+                    addCard({
+                      ...card,
+                      image: data.imageUrl,
+                      owner: card.owner ?? session.user.name ?? "",
+                    })
+                      .then(() => {
+                        setCard(defaultCard);
+                        setImage("");
+                        toast({
+                          title: `${card.name} created.`,
+                          status: "success",
+                          duration: 3000,
+                          isClosable: true,
+                        });
+                      })
+                      .catch((e) => {
+                        console.error(e);
+                        toast({
+                          title: `${card.name} could not be created.\n${e}`,
+                          status: "error",
+                          duration: 3000,
+                          isClosable: true,
+                        });
+                      });
+                  } else {
+                    console.error("Error uploading image:", data.error);
+                  }
+                } catch (error) {
+                  console.error("Error:", error);
+                }
+              }
             } else {
               toast({
                 title: "Name cannot be empty.",
