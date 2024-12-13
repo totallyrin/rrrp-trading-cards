@@ -184,7 +184,7 @@ export default function Create() {
                 // isDisabled={!session.user.admin}
               />
               {!isError ? (
-                !session.user.admin || (
+                !session.user.admin && (
                   <FormHelperText pl={2} mt={1} overflowWrap="break-word">
                     {"Images need to be verified before they" +
                       " appear publicly."}

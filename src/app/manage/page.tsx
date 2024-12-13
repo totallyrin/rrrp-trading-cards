@@ -345,7 +345,7 @@ export default function Characters() {
                           // isDisabled={!session.user.admin}
                         />
                         {!isError.includes(card.id) ? (
-                          !session.user.admin || (
+                          !session.user.admin && (
                             <FormHelperText
                               pl={2}
                               mt={1}
