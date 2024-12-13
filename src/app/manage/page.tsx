@@ -345,17 +345,25 @@ export default function Characters() {
                           // isDisabled={!session.user.admin}
                         />
                         {!isError.includes(card.id) ? (
-                          !session.user.admin && (
+                          pendingImages.includes(card.name) ? (
                             <FormHelperText
                               pl={2}
                               mt={1}
                               overflowWrap="break-word"
                             >
-                              {pendingImages.includes(card.name)
-                                ? "This image is waiting to be verified."
-                                : "Images need to be verified before they" +
-                                  " appear publicly."}
+                              This image is waiting to be verified.
                             </FormHelperText>
+                          ) : (
+                            !session.user.admin && (
+                              <FormHelperText
+                                pl={2}
+                                mt={1}
+                                overflowWrap="break-word"
+                              >
+                                Images need to be verified before they appear
+                                publicly.
+                              </FormHelperText>
+                            )
                           )
                         ) : (
                           <FormErrorMessage pl={2} mt={1}>
@@ -636,6 +644,14 @@ export default function Characters() {
                       if (modalCard)
                         deleteCard(modalCard)
                           .then(() => {
+                            if (modalCard.image)
+                              fetch("/api/delete-image", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                  url: modalCard.image,
+                                }),
+                              });
                             const updatedCards = cards.filter(
                               (c) => c.id !== modalCard?.id,
                             );
