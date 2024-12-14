@@ -248,8 +248,11 @@ export default function Characters() {
         <SlideFade in={session && cards.length > 0}>
           <VStack width="100%" height="100%" overflowY="scroll">
             {cards
-              .filter((card) =>
-                card.name.toLowerCase().includes(searchText.toLowerCase()),
+              .filter(
+                (card) =>
+                  card &&
+                  card.name &&
+                  card.name.toLowerCase().includes(searchText.toLowerCase()),
               )
               .map((card, i) => (
                 <Box key={card.id} width="100%">
@@ -329,13 +332,13 @@ export default function Characters() {
                                   isError.filter((i) => i !== card.id),
                                 );
                                 if (c.id === card.id) {
-                                  if (session.user.admin)
-                                    return {
-                                      ...c,
-                                      image: e.target.value,
-                                    };
-                                  else
-                                    return { ...c, newimage: e.target.value };
+                                  // if (session.user.admin)
+                                  //   return {
+                                  //     ...c,
+                                  //     image: e.target.value,
+                                  //   };
+                                  // else
+                                  return { ...c, newimage: e.target.value };
                                 }
                               } else setIsError([...isError, card.id]);
                               return c;
@@ -563,9 +566,57 @@ export default function Characters() {
                       <HStack pt={5}>
                         <Button
                           colorScheme="green"
-                          onClick={() => {
-                            if (card.name.length > 0)
-                              updateCard(card)
+                          onClick={async () => {
+                            if (card.name.length > 0) {
+                              let updatedCard = card;
+                              if (session.user.admin && card.newimage) {
+                                // delete old image
+                                if (
+                                  card.image &&
+                                  card.image.includes(`storage.googleapis.com`)
+                                ) {
+                                  await fetch("/api/delete-image", {
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                      url: card.image,
+                                    }),
+                                  });
+                                }
+                                // upload image and update url if admin
+                                const response = await fetch(
+                                  "/api/upload-image",
+                                  {
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                      url: card.newimage,
+                                      contentType: "image/jpeg",
+                                    }),
+                                  },
+                                );
+                                if (!response.ok) {
+                                  throw new Error(
+                                    `Failed to fetch the image. Status: ${response.status}`,
+                                  );
+                                }
+                                const data = await response.json();
+                                updatedCard = {
+                                  ...card,
+                                  image: data.imageUrl || "",
+                                  newimage: undefined,
+                                };
+                                const updatedCards = cards.map((c) =>
+                                  c.id === card.id ? updatedCard : c,
+                                );
+                                // @ts-ignore
+                                setCards(updatedCards);
+                              }
+                              updateCard(updatedCard)
                                 .then(() => {
                                   toast({
                                     title: `${card.name} saved.`,
@@ -583,13 +634,14 @@ export default function Characters() {
                                     isClosable: true,
                                   });
                                 });
-                            else
+                            } else {
                               toast({
                                 title: "Name cannot be empty.",
                                 status: "error",
                                 duration: 3000,
                                 isClosable: true,
                               });
+                            }
                           }}
                         >
                           Save
@@ -643,9 +695,9 @@ export default function Characters() {
                     onClick={() => {
                       if (modalCard)
                         deleteCard(modalCard)
-                          .then(() => {
+                          .then(async () => {
                             if (modalCard.image)
-                              fetch("/api/delete-image", {
+                              await fetch("/api/delete-image", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
