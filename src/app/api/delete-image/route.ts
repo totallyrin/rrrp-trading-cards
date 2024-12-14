@@ -12,6 +12,13 @@ function getFileNameFromUrl(url: string): string {
 }
 
 export async function POST(req: Request) {
+  if (!process.env.BUCKET_NAME) {
+    return NextResponse.json(
+      { error: "Missing environment variable" },
+      { status: 400 },
+    );
+  }
+
   try {
     const { url } = await req.json();
     if (!url) {
@@ -30,6 +37,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Image deleted successfully" });
   } catch (error) {
     console.error("Error deleting image:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as any).message },
+      { status: 500 },
+    );
   }
 }

@@ -5,6 +5,13 @@ import getGCPCredentials from "@/utils/getGCPCredentials";
 const storage = new Storage(getGCPCredentials());
 
 export async function POST(req: Request) {
+  if (!process.env.BUCKET_NAME) {
+    return NextResponse.json(
+      { error: "Missing environment variable" },
+      { status: 400 },
+    );
+  }
+
   try {
     const { url, contentType } = await req.json();
     if (!url || !contentType) {
@@ -36,6 +43,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ imageUrl });
   } catch (error) {
     console.error("Error uploading image:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as any).message },
+      { status: 500 },
+    );
   }
 }
