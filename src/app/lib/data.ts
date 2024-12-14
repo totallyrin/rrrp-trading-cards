@@ -46,6 +46,22 @@ export async function fetchAllCards() {
   }
 }
 
+export async function fetchCharacterCards(character: string) {
+  try {
+    return (
+      await sql`
+          SELECT *
+          FROM cards
+          WHERE name = ${character}
+          ORDER BY name ASC
+      `
+    ).rows;
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to fetch user card data.");
+  }
+}
+
 export async function fetchUserCards(username: string) {
   try {
     return (

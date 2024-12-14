@@ -24,9 +24,14 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { VerifyImage } from "@/utils/types";
+import { Card, VerifyImage } from "@/utils/types";
 import React, { useEffect, useState } from "react";
-import { approveImage, deleteImage, fetchAllImages } from "@/app/lib/data";
+import {
+  approveImage,
+  deleteImage,
+  fetchAllImages,
+  fetchCharacterCards,
+} from "@/app/lib/data";
 import { Search2Icon } from "@chakra-ui/icons";
 import { Image } from "@chakra-ui/next-js";
 
@@ -141,8 +146,50 @@ export default function Verify() {
                       <HStack justifyContent="flex-end">
                         <Button
                           colorScheme="green"
-                          onClick={() => {
-                            approveImage(img)
+                          onClick={async () => {
+                            // get card
+                            const card = await fetchCharacterCards(
+                              img.character,
+                            ).then((cards) => {
+                              return cards[0] as Card;
+                            });
+                            // delete old image
+                            if (
+                              card.image &&
+                              card.image.includes(`storage.googleapis.com`)
+                            ) {
+                              await fetch("/api/delete-image", {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  url: card.image,
+                                }),
+                              });
+                            }
+                            // upload image and update url
+                            const response = await fetch("/api/upload-image", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                url: img.image,
+                                contentType: "image/jpeg",
+                              }),
+                            });
+                            if (!response.ok) {
+                              throw new Error(
+                                `Failed to fetch the image. Status: ${response.status}`,
+                              );
+                            }
+                            const data = await response.json();
+                            const updatedImage = {
+                              ...img,
+                              image: data.imageUrl,
+                            };
+                            approveImage(updatedImage)
                               .then(() => {
                                 setImages(
                                   images?.filter((i) => i.id !== img.id),
